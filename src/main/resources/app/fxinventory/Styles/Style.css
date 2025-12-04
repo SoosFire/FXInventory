@@ -1,0 +1,29 @@
+@font-face {
+    font-family: "GodOfWar";
+    src: url("../Fonts/GODOFWAR.TTF");
+}
+
+@font-face {
+    font-family: "Vampire Wars";
+    src: url("../Fonts/VWI.ttf");
+}
+
+@font-face {
+    font-family: "Garet Book";
+    src: url("../Fonts/Garet-Book.ttf");
+}
+
+.game-title {
+    -fx-font-family: "Vampire Wars";
+    -fx-font-size: 70;
+}
+
+.header-custom {
+    -fx-font-family: "GodOfWar";
+    -fx-font-size: 50;
+}
+
+.description-label {
+    -fx-font-family: "Garet Book";
+    -fx-font-size: 20;
+}

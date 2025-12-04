@@ -6,12 +6,23 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.text.Font;
 
 import java.io.IOException;
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+
+
+        var url = getClass().getResource("/app/fxinventory/Fonts/Garet-Book.ttf");
+        System.out.println("Font URL: " + url); // should NOT be null
+
+        Font f = Font.loadFont(url.toExternalForm(), 20);
+        System.out.println("Loaded font: " + f);
+        if (f != null) {
+            System.out.println("Font name to use in CSS: " + f.getName());
+        }
 
         FXMLLoader loader = new FXMLLoader(
                 Main.class.getResource("Main.fxml"));
