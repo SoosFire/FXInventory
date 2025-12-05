@@ -27,7 +27,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
 
 
-        var url = getClass().getResource("/app/fxinventory/Fonts/Garet-Book.ttf");
+        var url = getClass().getResource("/app/fxinventory/Fonts/Brothers.ttf");
         System.out.println("Font URL: " + url); // should NOT be null
 
         Font f = Font.loadFont(url.toExternalForm(), 20);

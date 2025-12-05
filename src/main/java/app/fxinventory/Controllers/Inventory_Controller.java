@@ -62,11 +62,10 @@ public class Inventory_Controller {
                 rebuildInventoryVBox();
             });
 
-            // Spacer pushes button to the right
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            HBox row = new HBox(10); // 10px spacing between children
+            HBox row = new HBox(50);
             row.getChildren().addAll(label, spacer, button);
 
             // Make the row stretch to full width of the VBox

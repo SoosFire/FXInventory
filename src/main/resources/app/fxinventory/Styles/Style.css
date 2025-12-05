@@ -13,8 +13,13 @@
     src: url("../Fonts/Garet-Book.ttf");
 }
 
+@font-face {
+    font-family: "Brothers Circus Regular";
+    src: url("../Fonts/Brothers.ttf");
+}
+
 .game-title {
-    -fx-font-family: "Vampire Wars";
+    -fx-font-family: "Brothers Circus Regular";
     -fx-font-size: 70;
 }
 
@@ -24,11 +29,16 @@
 }
 
 .description-label {
-    -fx-font-family: "Garet Book";
+    -fx-font-family: "Brothers Circus Regular";
     -fx-font-size: 20;
 }
 .main-buttons {
-    -fx-font-family: "Garet Book";
+    -fx-font-family: "Brothers Circus Regular";
     -fx-font-size: 30;
+}
+
+.item_description {
+    -fx-font-family: "Brothers Circus Regular";
+    -fx-font-size: 12;
 }
 

@@ -2,6 +2,8 @@ package app.fxinventory.Controllers;
 
 import app.fxinventory.Enums.ItemName;
 import app.fxinventory.Inventory.Inventory;
+import app.fxinventory.Item.Item;
+import app.fxinventory.Item.ItemRegistry;
 import app.fxinventory.Main;
 import app.fxinventory.Shop.Shop;
 import javafx.event.ActionEvent;
@@ -32,6 +34,8 @@ public class Shop_Controller {
     @FXML
     private TextArea inventory_TextArea;
 
+    Item sword = ItemRegistry.getDefinition(ItemName.Sword).createInstance();
+
     @FXML
     public void initialize() {
         gold_Label.setText(String.valueOf(inventory.getGold()));
@@ -40,12 +44,9 @@ public class Shop_Controller {
 
     @FXML
     public void buyItem(){
-        if (inventory.getGold() >= 200){
+        Item item = sword;
+        if (inventory.getGold() >= item.getCost()){
             shop.buyItem(inventory, ItemName.Sword);
-
-            inventory.addGold(-200);
-            inventory.addWeight(4.1);
-
             weight_Label.setText(String.valueOf(inventory.getWeight()) + "/50");
             gold_Label.setText(String.valueOf(inventory.getGold()));
         }

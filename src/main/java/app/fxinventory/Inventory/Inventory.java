@@ -44,5 +44,14 @@ public class Inventory {
 
     public void removeItem(Item item) {
         inventory.remove(item);
+        gold += item.getCost();
+        weight -= item.getWeight();
+    }
+
+    public void updateBuyItemGold(int itemCost) {
+        this.gold -= itemCost;
+    }
+    public void updateBuyItemWeight(double itemWeight) {
+        this.weight += itemWeight;
     }
 }
