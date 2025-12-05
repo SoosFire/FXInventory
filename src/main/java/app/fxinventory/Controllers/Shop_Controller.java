@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Game_Home_Controller {
+public class Shop_Controller {
 
     private Parent root;
     private Scene scene;
@@ -39,34 +39,24 @@ public class Game_Home_Controller {
     }
 
     @FXML
-    public void giveGold(){
-        inventory.addGold(50);
-        gold_Label.setText(String.valueOf(inventory.getGold()));
+    public void buyItem(){
+        if (inventory.getGold() >= 200){
+            shop.buyItem(inventory, ItemName.Sword);
+
+            inventory.addGold(-200);
+            inventory.addWeight(4.1);
+
+            weight_Label.setText(String.valueOf(inventory.getWeight()) + "/50");
+            gold_Label.setText(String.valueOf(inventory.getGold()));
+        }
     }
 
     @FXML
-    public void showInventory(){
-        inventory_TextArea.clear();
-        inventory_TextArea.appendText(inventory.showInventory());
-    }
-
-    @FXML
-    public void showShopScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Main.class.getResource("Shop.fxml"));
+    public void onBackButton(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Main.class.getResource("Game_Home.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root,1000,750);
         stage.setScene(scene);
         stage.show();
     }
-
-    @FXML
-    public void showInventoryScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Main.class.getResource("Inventory.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root,1000,750);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
 }

@@ -14,4 +14,10 @@ public class Shop {
         Item boughtItem = ItemRegistry.getDefinition(itemName).createInstance();
         inventory.addItemToInventory(boughtItem);
     }
+
+    public void sellItem(Inventory inventory, Item item) {
+        inventory.removeItem(item);
+        int sellGoldAmount = item.getCost();
+        inventory.addGold(sellGoldAmount);
+    }
 }

@@ -1,18 +1,21 @@
 package app.fxinventory.Inventory;
 
+import app.fxinventory.Item.Item;
 import java.util.ArrayList;
-
-import app.fxinventory.Item.*;
+import java.util.List;
 
 public class Inventory {
 
     protected ArrayList<Item> inventory = new ArrayList<>();
-    protected int gold = 0;
+    protected int gold = 800;
     protected double weight = 0;
-
 
     public void addItemToInventory(Item item) {
         inventory.add(item);
+    }
+
+    public List<Item> getItems() {
+        return inventory;
     }
 
     public String showInventory() {
@@ -26,13 +29,20 @@ public class Inventory {
     public int getGold() {
         return gold;
     }
+
     public double getWeight() {
         return weight;
     }
+
     public void addWeight(double weightAmount) {
         this.weight += weightAmount;
     }
+
     public void addGold(int goldAmount) {
         this.gold += goldAmount;
+    }
+
+    public void removeItem(Item item) {
+        inventory.remove(item);
     }
 }

@@ -11,6 +11,18 @@ import javafx.scene.text.Font;
 import java.io.IOException;
 
 public class Main extends Application {
+
+    private static final Inventory INVENTORY = new Inventory();
+    private static final Shop SHOP = new Shop();
+
+    public static Inventory getInventory() {
+        return INVENTORY;
+    }
+
+    public static Shop getShop() {
+        return SHOP;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
 
