@@ -29,7 +29,7 @@ public class Inventory_Controller {
 
     // 3 rows x 6 columns = 18 slots total
     private static final int ROWS = 3;
-    private static final int COLS = 9;
+    private static final int COLS = 8;
 
     private static final double SLOT_IMAGE_SIZE = 100;
     private static final double SLOT_BUTTON_WIDTH = 100;
@@ -57,7 +57,7 @@ public class Inventory_Controller {
         int index = 0;
 
         for (int i = 0; i < ROWS; i++) {
-            HBox row = new HBox(2);
+            HBox row = new HBox(7);
             row.setAlignment(Pos.CENTER_LEFT);
 
             for (int j = 0; j < COLS; j++) {
@@ -77,8 +77,8 @@ public class Inventory_Controller {
         card.setAlignment(Pos.TOP_CENTER);
         card.setPrefWidth(SLOT_IMAGE_SIZE);
         card.setMinWidth(SLOT_IMAGE_SIZE);
-        card.setMaxWidth(SLOT_IMAGE_SIZE); // tiny bit of margin
-        card.getStyleClass().add("name_bar");
+        card.setMaxWidth(SLOT_IMAGE_SIZE); // tiny bit of margi
+        card.getStyleClass().add("name_card");
 
         // Image + amount overlay
         StackPane imageStack = new StackPane();
@@ -142,14 +142,10 @@ public class Inventory_Controller {
         return card;
     }
 
+    // TO DO
     @FXML
     public void onSlotButtonClicked(Item item) {
-        // Your inventory item interaction logic
         System.out.println("Clicked inventory item: " + item.getName());
-        // Example:
-        // inventory.removeItem(item);
-        // updateHud();
-        // buildInventory();
     }
 
     private void updateHud() {

@@ -54,3 +54,17 @@
     -fx-background-position: center center;
 }
 
+.background_shop {
+    -fx-background-image: url("../Images/background_frame.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 1000 750, false, false;   /* CARD_WIDTH x CARD_HEIGHT */
+    -fx-background-position: center center;
+}
+
+.name_card {
+    -fx-background-image: url("../Images/barmid_ready.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100 150, false, false;
+    -fx-background-position: center center;
+}
+
