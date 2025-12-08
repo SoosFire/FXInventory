@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" style="-fx-background-color: #d0d9d9;" stylesheets="@Styles/Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.fxinventory.Controllers.Shop_Controller">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" styleClass="background" stylesheets="@Styles/Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.fxinventory.Controllers.Shop_Controller">
    <children>
        <Label layoutX="53.0" layoutY="69.0" styleClass="game-title" text="SHOP" />
-      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#e0e0e0" height="50.0" layoutX="786.0" layoutY="14.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" width="200.0" />
-      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#e0e0e0" height="50.0" layoutX="786.0" layoutY="70.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" width="200.0" />
+      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#4f4f4f" height="50.0" layoutX="786.0" layoutY="14.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" style="-fx-background-color: #4f4f4f" width="200.0" />
+      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#4f4f4f" height="50.0" layoutX="786.0" layoutY="70.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" style="-fx-background-color: #4f4f4f" width="200.0" />
       <Label fx:id="gold_Label" layoutX="886.0" layoutY="26.0" styleClass="description-label" text="Gold" />
       <Label fx:id="weight_Label" layoutX="885.0" layoutY="82.0" styleClass="description-label" text="Weight" />
       <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="792.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@Images/Gold_Icon.png" />
+            <Image url="@Images/Coin.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="792.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
@@ -29,68 +27,13 @@
          </image>
       </ImageView>
        <Line endX="182.5" layoutX="153.0" layoutY="162.0" startX="-100.0" />
-       <Button layoutX="911.0" layoutY="661.0" maxHeight="75.0" maxWidth="75.0" mnemonicParsing="false" onAction="#onBackButton" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: #d0d9d9;">
-         <graphic>
-             <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                 <image>
-                     <Image url="@Images/X_Icon.png" />
-                 </image>
-             </ImageView>
-         </graphic></Button>
-      <VBox layoutX="53.0" layoutY="224.0" prefHeight="388.0" prefWidth="727.0" spacing="4.0">
-         <children>
-            <HBox prefHeight="80.0" prefWidth="180.0" spacing="5.0">
-               <children>
-                  <HBox prefHeight="82.0" prefWidth="244.0" style="-fx-border-color: #7C7C7C;">
-                     <children>
-                        <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <Label alignment="CENTER" prefHeight="20.0" prefWidth="200.0" styleClass="item_description" text="Sword" />
-                              <Label alignment="CENTER" prefHeight="20.0" prefWidth="100.0" style="-fx-alignment: LEFT;" styleClass="item_description" text="Cost: 100" />
-                              <Label alignment="CENTER" prefHeight="20.0" prefWidth="100.0" style="-fx-alignment: LEFT;" styleClass="item_description" text="Dmg: 5" />
-                           </children>
-                        </VBox>
-                        <Button mnemonicParsing="false" prefHeight="82.0" prefWidth="82.0">
-                           <graphic>
-                              <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../../../../../Desktop/gold-drawing-money-bag-clip-art-png-favpng-Yh7gbVdmdqYpKH3cB2x7eRY1p.jpg" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </HBox>
-                  <HBox prefHeight="82.0" prefWidth="244.0" style="-fx-border-color: #7C7C7C;">
-                     <children>
-                        <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="NEVER">
-                           <children>
-                              <Label alignment="CENTER" prefHeight="20.0" prefWidth="200.0" styleClass="item_description" text="Steel Chestplate" />
-                              <Label alignment="CENTER" prefHeight="20.0" prefWidth="100.0" style="-fx-alignment: LEFT;" styleClass="item_description" text="Cost: 250" />
-                              <Label alignment="CENTER" prefHeight="20.0" prefWidth="100.0" style="-fx-alignment: LEFT;" styleClass="item_description" text="Armor: 25" />
-                           </children>
-                        </VBox>
-                        <Button mnemonicParsing="false" prefHeight="82.0" prefWidth="82.0">
-                           <graphic>
-                              <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../../../../../Desktop/gold-drawing-money-bag-clip-art-png-favpng-Yh7gbVdmdqYpKH3cB2x7eRY1p.jpg" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </HBox>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <Button layoutX="53.0" layoutY="183.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="178.0" styleClass="item_description" text="Refresh Shop (100 Gold)" />
+       <Button layoutX="911.0" layoutY="661.0" maxHeight="75.0" maxWidth="75.0" mnemonicParsing="false" onAction="#onBackButton" prefHeight="75.0" prefWidth="75.0" style="-fx-background-color: #787878; -fx-border-color: black; -fx-border-radius: 5;" />
+      <VBox fx:id="shopVBox" layoutX="53.0" layoutY="224.0" prefHeight="388.0" prefWidth="727.0" spacing="4.0" />
+      <Button layoutX="53.0" layoutY="183.0" mnemonicParsing="false" onAction="#onRefreshShop" prefHeight="25.0" prefWidth="178.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Refresh Shop (100 Gold)" />
+       <ImageView disable="true" fitHeight="75.0" fitWidth="75.0" layoutX="911.0" layoutY="661.0" pickOnBounds="true" preserveRatio="true">
+           <image>
+               <Image url="@Images/X.png" />
+           </image>
+       </ImageView>
    </children>
 </AnchorPane>

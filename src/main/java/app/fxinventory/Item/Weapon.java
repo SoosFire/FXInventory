@@ -21,6 +21,10 @@ public class Weapon extends Item {
         return super.getName();
     }
 
+    public int getDamage () {
+        return damage;
+    }
+
     @Override
     public Item createInstance () {
         return new Weapon(name,weight,cost,damage,type,slotType,totalAmount  );

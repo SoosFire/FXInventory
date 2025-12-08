@@ -7,7 +7,7 @@ import java.util.List;
 public class Inventory {
 
     protected ArrayList<Item> inventory = new ArrayList<>();
-    protected int gold = 800;
+    protected int gold = 8000;
     protected double weight = 0;
 
     public void addItemToInventory(Item item) {

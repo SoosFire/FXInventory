@@ -3,61 +3,46 @@ package app.fxinventory.Enums;
 public enum ItemName {
 
     // Weapons
-    Sword,
-    DualSword,
-    Axe,
-    Pickaxe,
-    Shovel,
-    Dagger,
+    Wooden_Sword,
+    Silver_Sword,
+    Golden_Sword,
+    Silver_Axe,
+    Golden_Axe,
+    Silver_Heavy_Sword,
+    Golden_Heavy_Sword,
+    Spear,
+    Steel_Spear,
     Staff,
-    Bow,
-    Crossbow,
-    Lance,
+    Upgraded_Staff,
+    Hammer,
+    Golden_Hammer,
+    Dual_Axe,
+    Golden_Dual_Axe,
+
+
 
     // Armor
-    SteelChestplate,
-    Chainmail,
-    LeatherChestplate,
+    Basic_Helmet,
+    Golden_Helmet,
 
-    SteelHelmet,
-    LeatherHelmet,
-    ChainmailHelmet,
+    Basic_Chest,
+    Golden_Chest,
 
-    SteelLeggings,
-    LeatherLeggings,
-    ChainmailLeggings,
+    Small_Wooden_Shield,
+    Small_Silver_Shield,
+    Large_Wooden_Shield,
+    Large_Silver_Shield,
 
-    SteelBoots,
-    LeatherBoots,
-    ChainmailBoots,
-
-    SteelGauntlet,
-    LeatherGauntlet,
-    ChainmailGauntlet,
-
-    SteelShoulderPiece,
-    LeatherShoulderPiece,
-    ChainmailShoulderPiece,
-    Cloak,
-
-    // Weapon Utilities
-    SteelTippedArrow,
-    BoltArrow,
-    PoisonArrow,
-    FireArrow,
+    // Scroll and tome
+    Scroll,
+    Blue_Tome,
+    Green_Tome,
+    Red_Tome,
+    Yellow_Tome,
 
     // Consumables
-    HealthPotion,
-    ManaPotion,
-    SpeedPotion,
-    StrengthPotion,
-    StaminaPotion,
-    AgilityPotion,
-
-    // Stat-bonus
-    Necklace,
-    Chalice,
-    Ring,
-    Bracelet,
-    Amulet,
+    Health_Potion,
+    Mana_Potion,
+    Strength_Potion,
+    Defence_Potion,
 }

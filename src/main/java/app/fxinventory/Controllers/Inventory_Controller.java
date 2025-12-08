@@ -1,86 +1,163 @@
 package app.fxinventory.Controllers;
 
+import app.fxinventory.Item.ItemNameToItemNameRegistry;
+
+import app.fxinventory.Enums.ItemName;
 import app.fxinventory.Inventory.Inventory;
 import app.fxinventory.Item.Item;
+import app.fxinventory.Item.ItemImageRegistry;
 import app.fxinventory.Main;
-import app.fxinventory.Shop.Shop;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.Objects;
 
 public class Inventory_Controller {
 
-    private Parent root;
-    private Scene scene;
-    private Stage stage;
-
     private final Inventory inventory = Main.getInventory();
-    private final Shop shop = Main.getShop();
+
+    // 3 rows x 6 columns = 18 slots total
+    private static final int ROWS = 3;
+    private static final int COLS = 9;
+
+    private static final double SLOT_IMAGE_SIZE = 100;
+    private static final double SLOT_BUTTON_WIDTH = 100;
+    private static final double SLOT_BUTTON_HEIGHT = 50;
+
+    @FXML
+    private VBox inventoryVBox;
 
     @FXML
     private Label gold_Label;
+
     @FXML
     private Label weight_Label;
-    @FXML
-    private VBox inventory_VBox;
 
     @FXML
     public void initialize() {
         updateHud();
-        rebuildInventoryVBox();
+        buildInventory();
     }
 
+    private void buildInventory() {
+        inventoryVBox.getChildren().clear();
 
-    private void updateHud() {
-        gold_Label.setText(String.valueOf(inventory.getGold()));
-        weight_Label.setText(inventory.getWeight() + "/50");
-    }
+        List<Item> items = inventory.getItems();
+        int index = 0;
 
-    private void rebuildInventoryVBox() {
-        inventory_VBox.getChildren().clear();
+        for (int i = 0; i < ROWS; i++) {
+            HBox row = new HBox(2);
+            row.setAlignment(Pos.CENTER_LEFT);
 
-        for (Item item : inventory.getItems()) {
-            Label label = new Label(item.getTotalAmount() + "x " + item.getName());
-            Button button = new Button("Sell");
+            for (int j = 0; j < COLS; j++) {
+                Item item = index < items.size() ? items.get(index) : null;
+                VBox slot = createSlotCard(item);
+                row.getChildren().add(slot);
+                index++;
+            }
 
-            button.setOnAction(e -> {
-                shop.sellItem(inventory, item);
-                updateHud();
-                rebuildInventoryVBox();
-            });
-
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, Priority.ALWAYS);
-
-            HBox row = new HBox(50);
-            row.getChildren().addAll(label, spacer, button);
-
-            // Make the row stretch to full width of the VBox
-            row.setMaxWidth(Double.MAX_VALUE);
-
-            inventory_VBox.getChildren().add(row);
+            inventoryVBox.getChildren().add(row);
         }
     }
 
+    private VBox createSlotCard(Item item) {
+        // Outer card for a single slot
+        VBox card = new VBox(3);
+        card.setAlignment(Pos.TOP_CENTER);
+        card.setPrefWidth(SLOT_IMAGE_SIZE);
+        card.setMinWidth(SLOT_IMAGE_SIZE);
+        card.setMaxWidth(SLOT_IMAGE_SIZE); // tiny bit of margin
+        card.getStyleClass().add("name_bar");
+
+        // Image + amount overlay
+        StackPane imageStack = new StackPane();
+        imageStack.setPrefSize(SLOT_IMAGE_SIZE, SLOT_IMAGE_SIZE);
+        imageStack.setMinSize(SLOT_IMAGE_SIZE, SLOT_IMAGE_SIZE);
+        imageStack.setMaxSize(SLOT_IMAGE_SIZE, SLOT_IMAGE_SIZE);
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(SLOT_IMAGE_SIZE);
+        imageView.setFitHeight(SLOT_IMAGE_SIZE);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.setCache(true);
+
+        Label amountLabel = new Label();
+
+        if (item != null) {
+            // Adjust this if your Item class exposes the enum differently
+            // e.g. item.getItemName()
+            ItemName itemName = ItemNameToItemNameRegistry.fromDisplayName(item.getName());
+            String path = ItemImageRegistry.getDefinition(itemName);
+            if (path != null) {
+                URL url = getClass().getResource(path);
+                if (url != null) {
+                    imageView.setImage(new Image(url.toExternalForm()));
+                }
+            }
+
+            amountLabel.setText(String.valueOf(item.getTotalAmount()));
+        } else {
+            // Optional: empty slot placeholder
+            URL url = getClass().getResource("/app/fxinventory/Images/empty_slot.png");
+            if (url != null) {
+                imageView.setImage(new Image(url.toExternalForm()));
+            }
+            amountLabel.setText("");
+        }
+
+        StackPane.setAlignment(amountLabel, Pos.BOTTOM_LEFT);
+        StackPane.setMargin(amountLabel, new Insets(0, 0, 3, 3));
+
+        imageStack.getChildren().addAll(imageView, amountLabel);
+
+        // Button under the image
+        Button slotButton = new Button(item != null ? "SELL" : "");
+        slotButton.setPrefWidth(SLOT_BUTTON_WIDTH);
+        slotButton.setMinWidth(SLOT_BUTTON_WIDTH);
+        slotButton.setMaxWidth(SLOT_BUTTON_WIDTH);
+        slotButton.setPrefHeight(SLOT_BUTTON_HEIGHT);
+
+        if (item == null) {
+            slotButton.setDisable(true);
+        } else {
+            slotButton.setOnAction(e -> onSlotButtonClicked(item));
+        }
+
+        VBox.setVgrow(imageStack, Priority.NEVER);
+        VBox.setVgrow(slotButton, Priority.NEVER);
+
+        card.getChildren().addAll(imageStack, slotButton);
+        return card;
+    }
+
     @FXML
-    public void onBackButton(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Main.class.getResource("Game_Home.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root,1000,750);
-        stage.setScene(scene);
-        stage.show();
+    public void onSlotButtonClicked(Item item) {
+        // Your inventory item interaction logic
+        System.out.println("Clicked inventory item: " + item.getName());
+        // Example:
+        // inventory.removeItem(item);
+        // updateHud();
+        // buildInventory();
+    }
+
+    private void updateHud() {
+        if (gold_Label != null) {
+            gold_Label.setText(String.valueOf(inventory.getGold()));
+        }
+        if (weight_Label != null) {
+            weight_Label.setText(inventory.getWeight() + "/50");
+        }
     }
 }

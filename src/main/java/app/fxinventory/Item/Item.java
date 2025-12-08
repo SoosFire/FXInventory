@@ -25,6 +25,7 @@ public abstract class Item {
     public double getWeight() {
         return weight;
     }
+
     public int getCost() {
         return cost;
     }
@@ -36,6 +37,7 @@ public abstract class Item {
     public int getTotalAmount() {
         return totalAmount;
     }
+
     public void updateTotalAmount(int amount) {
         this.totalAmount += amount;
     }

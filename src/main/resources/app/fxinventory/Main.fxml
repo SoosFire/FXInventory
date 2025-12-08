@@ -5,10 +5,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1000.0" style="-fx-background-color: #d0d9d9;" stylesheets="@Styles/Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.fxinventory.Controllers.Main_Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1000.0" styleClass="background" stylesheets="@Styles/Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.fxinventory.Controllers.Main_Controller">
    <children>
       <Label layoutX="176.0" layoutY="142.0" styleClass="game-title" text="Legend of CodeCraft" />
-      <Button layoutX="325.0" layoutY="329.0" mnemonicParsing="false" onAction="#onStartGame" prefHeight="100.0" prefWidth="350.0" style="-fx-background-color: white; -fx-border-color: black;" text="Start Game">
+      <Button layoutX="325.0" layoutY="329.0" mnemonicParsing="false" onAction="#onStartGame" prefHeight="100.0" prefWidth="350.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black; -fx-text-fill: white" text="Start Game">
          <font>
             <Font name="Chakra Petch Italic" size="48.0" />
          </font>

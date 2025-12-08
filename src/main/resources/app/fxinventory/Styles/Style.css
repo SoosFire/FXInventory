@@ -21,24 +21,36 @@
 .game-title {
     -fx-font-family: "Brothers Circus Regular";
     -fx-font-size: 70;
+    -fx-text-fill: #FFFFFF;
 }
 
 .header-custom {
     -fx-font-family: "GodOfWar";
     -fx-font-size: 50;
+    -fx-text-fill: #FFFFFF;
 }
 
 .description-label {
     -fx-font-family: "Brothers Circus Regular";
     -fx-font-size: 20;
+    -fx-text-fill: #FFFFFF;
 }
 .main-buttons {
     -fx-font-family: "Brothers Circus Regular";
     -fx-font-size: 30;
+    -fx-text-fill: #FFFFFF;
 }
 
 .item_description {
     -fx-font-family: "Brothers Circus Regular";
     -fx-font-size: 12;
+    -fx-text-fill: #FFFFFF;
+}
+
+.background {
+    -fx-background-image: url("../Images/background_frame.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 1000 750, false, false;   /* CARD_WIDTH x CARD_HEIGHT */
+    -fx-background-position: center center;
 }
 

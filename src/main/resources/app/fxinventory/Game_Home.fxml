@@ -8,24 +8,24 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" style="-fx-background-color: #d0d9d9;" stylesheets="@Styles/Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.fxinventory.Controllers.Game_Home_Controller">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" styleClass="background" stylesheets="@Styles/Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.fxinventory.Controllers.Game_Home_Controller">
    <children>
       <Label layoutX="52.0" layoutY="59.0" styleClass="game-title" text="MENU" />
-      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#e0e0e0" height="50.0" layoutX="786.0" layoutY="14.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" width="200.0" />
-      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#e0e0e0" height="50.0" layoutX="786.0" layoutY="70.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" width="200.0" />
+      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#4f4f4f" height="50.0" layoutX="786.0" layoutY="14.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" width="200.0" />
+      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#4f4f4f" height="50.0" layoutX="786.0" layoutY="70.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" width="200.0" />
       <Label fx:id="gold_Label" layoutX="886.0" layoutY="26.0" styleClass="description-label" text="Gold" />
       <Label fx:id="weight_Label" layoutX="886.0" layoutY="82.0" styleClass="description-label" text="Weight" />
       <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="792.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@Images/Gold_Icon.png" />
+            <Image url="@Images/Coin.png" />
          </image></ImageView>
       <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="792.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/Weight_Icon.png" />
          </image></ImageView>
-      <Button layoutX="52.0" layoutY="250.0" mnemonicParsing="false" onAction="#showInventoryScene" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #e0e0e0; -fx-border-color: black;" styleClass="main-buttons" text="Inventory" />
-      <Button layoutX="52.0" layoutY="340.0" mnemonicParsing="false" onAction="#showShopScene" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #e0e0e0; -fx-border-color: black;" styleClass="main-buttons" text="Shop" />
-      <Button layoutX="52.0" layoutY="430.0" mnemonicParsing="false" onAction="#giveGold" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #e0e0e0; -fx-border-color: black;" styleClass="main-buttons" text="Add Gold" />
+      <Button layoutX="52.0" layoutY="250.0" mnemonicParsing="false" onAction="#showInventoryScene" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black;" styleClass="main-buttons" text="Inventory" />
+      <Button layoutX="52.0" layoutY="340.0" mnemonicParsing="false" onAction="#showShopScene" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black;" styleClass="main-buttons" text="Shop" />
+      <Button layoutX="52.0" layoutY="430.0" mnemonicParsing="false" onAction="#giveGold" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black;" styleClass="main-buttons" text="Add Gold" />
       <Line endX="182.5" layoutX="153.0" layoutY="162.0" startX="-100.0" />
    </children>
 </AnchorPane>
