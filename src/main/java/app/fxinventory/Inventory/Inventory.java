@@ -6,9 +6,12 @@ import java.util.List;
 
 public class Inventory {
 
+    // Inventory attributter
+
     protected ArrayList<Item> inventory = new ArrayList<>();
-    protected int gold = 8000;
-    protected double weight = 0;
+    protected int gold = 11500;                 // Specificerer [gold] start amount
+    protected double weight = 0;                // Specificerer [weight] start amount
+    protected double weightLimit = 5000;        // Specificerer [weightLimit] - Hvor meget plads kan vi maks have?
 
     public void addItemToInventory(Item item) {
         inventory.add(item);
@@ -16,14 +19,6 @@ public class Inventory {
 
     public List<Item> getItems() {
         return inventory;
-    }
-
-    public String showInventory() {
-        String result = "";
-        for (int i = 0; i < inventory.size(); i++) {
-            result += String.format("%s\n", inventory.get(i).getTotalAmount() + "x " + inventory.get(i).getName());
-        }
-        return result;
     }
 
     public int getGold() {
@@ -53,5 +48,9 @@ public class Inventory {
     }
     public void updateBuyItemWeight(double itemWeight) {
         this.weight += itemWeight;
+    }
+
+    public double getWeightLimit(){
+        return  weightLimit;
     }
 }

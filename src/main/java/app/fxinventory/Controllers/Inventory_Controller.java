@@ -1,15 +1,19 @@
 package app.fxinventory.Controllers;
 
-import app.fxinventory.Item.ItemNameToItemNameRegistry;
+import app.fxinventory.Item.*;
 
 import app.fxinventory.Enums.ItemName;
 import app.fxinventory.Inventory.Inventory;
-import app.fxinventory.Item.Item;
-import app.fxinventory.Item.ItemImageRegistry;
 import app.fxinventory.Main;
+import app.fxinventory.Shop.Shop;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,7 +22,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
@@ -26,14 +33,21 @@ import java.util.Objects;
 public class Inventory_Controller {
 
     private final Inventory inventory = Main.getInventory();
+    private final Shop shop = Main.getShop();
 
     // 3 rows x 6 columns = 18 slots total
     private static final int ROWS = 3;
     private static final int COLS = 8;
+    private  int index = 0;
+    private  int inventoryPage = 1;
 
     private static final double SLOT_IMAGE_SIZE = 100;
     private static final double SLOT_BUTTON_WIDTH = 100;
     private static final double SLOT_BUTTON_HEIGHT = 50;
+
+    private Parent root;
+    private Scene scene;
+    private Stage stage;
 
     @FXML
     private VBox inventoryVBox;
@@ -45,16 +59,18 @@ public class Inventory_Controller {
     private Label weight_Label;
 
     @FXML
+    private Label pageLabel;
+
+    @FXML
     public void initialize() {
         updateHud();
-        buildInventory();
+        buildInventory(0);
     }
 
-    private void buildInventory() {
+    private void buildInventory(int index) {
         inventoryVBox.getChildren().clear();
 
         List<Item> items = inventory.getItems();
-        int index = 0;
 
         for (int i = 0; i < ROWS; i++) {
             HBox row = new HBox(7);
@@ -94,6 +110,7 @@ public class Inventory_Controller {
         imageView.setCache(true);
 
         Label amountLabel = new Label();
+        amountLabel.setTextFill(Color.WHITE);
 
         if (item != null) {
             // Adjust this if your Item class exposes the enum differently
@@ -106,8 +123,15 @@ public class Inventory_Controller {
                     imageView.setImage(new Image(url.toExternalForm()));
                 }
             }
+            if (item instanceof Utility utility){
+                amountLabel.setText(String.valueOf(utility.getStackSize()));
+            }
+            else if (item instanceof Consumable consumable){
+                amountLabel.setText(String.valueOf(consumable.getStackSize()));
+            } else if (item instanceof Weapon || item instanceof Armor){
+                amountLabel.setText("1");
+            }
 
-            amountLabel.setText(String.valueOf(item.getTotalAmount()));
         } else {
             // Optional: empty slot placeholder
             URL url = getClass().getResource("/app/fxinventory/Images/empty_slot.png");
@@ -132,7 +156,7 @@ public class Inventory_Controller {
         if (item == null) {
             slotButton.setDisable(true);
         } else {
-            slotButton.setOnAction(e -> onSlotButtonClicked(item));
+            slotButton.setOnAction(e -> onSlotSellClicked(item));
         }
 
         VBox.setVgrow(imageStack, Priority.NEVER);
@@ -144,8 +168,10 @@ public class Inventory_Controller {
 
     // TO DO
     @FXML
-    public void onSlotButtonClicked(Item item) {
-        System.out.println("Clicked inventory item: " + item.getName());
+    public void onSlotSellClicked(Item item) {
+        shop.sellItem(inventory, item);
+        updateHud();
+        buildInventory(index);
     }
 
     private void updateHud() {
@@ -153,7 +179,35 @@ public class Inventory_Controller {
             gold_Label.setText(String.valueOf(inventory.getGold()));
         }
         if (weight_Label != null) {
-            weight_Label.setText(inventory.getWeight() + "/50");
+            weight_Label.setText(inventory.getWeight() + "/" +  inventory.getWeightLimit());
         }
+
+        pageLabel.setText(inventoryPage + "/" + 8);
+    }
+
+    @FXML
+    public void onBackButton(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Main.class.getResource("Game_Home.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root,1000,750);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void onClickNextPage() {
+        inventoryPage++;
+        index = (inventoryPage - 1) * 24;
+        buildInventory(index);
+        updateHud();
+    }
+    @FXML
+    public void onClickPreviousPage() {
+        if (inventoryPage > 1) {
+            inventoryPage--;
+        }
+        index = (inventoryPage - 1) * 24;
+        buildInventory(index);
+        updateHud();
     }
 }

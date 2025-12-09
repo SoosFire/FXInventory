@@ -34,20 +34,18 @@ public class Game_Home_Controller {
 
     @FXML
     public void initialize() {
-        gold_Label.setText(String.valueOf(inventory.getGold()));
-        weight_Label.setText(String.valueOf(inventory.getWeight()) + "/50");
+        if (gold_Label != null) {
+            gold_Label.setText(String.valueOf(inventory.getGold()));
+        }
+        if (weight_Label != null) {
+            weight_Label.setText(inventory.getWeight() + "/" +  inventory.getWeightLimit());
+        }
     }
 
     @FXML
     public void giveGold(){
         inventory.addGold(50);
         gold_Label.setText(String.valueOf(inventory.getGold()));
-    }
-
-    @FXML
-    public void showInventory(){
-        inventory_TextArea.clear();
-        inventory_TextArea.appendText(inventory.showInventory());
     }
 
     @FXML

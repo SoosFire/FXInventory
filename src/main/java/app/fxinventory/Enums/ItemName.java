@@ -33,7 +33,7 @@ public enum ItemName {
     Large_Wooden_Shield,
     Large_Silver_Shield,
 
-    // Scroll and tome
+    // Utility
     Scroll,
     Blue_Tome,
     Green_Tome,

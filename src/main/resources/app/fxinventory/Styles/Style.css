@@ -68,3 +68,10 @@
     -fx-background-position: center center;
 }
 
+.arrow {
+    -fx-background-image: url("../Images/arrowRed.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 50 20, false, false;
+    -fx-background-position: center center;
+}
+

@@ -12,9 +12,12 @@ import java.io.IOException;
 
 public class Main extends Application {
 
+    // Oprettelse af INVENTORY og SHOP
     private static final Inventory INVENTORY = new Inventory();
     private static final Shop SHOP = new Shop();
 
+    // Metode til at passe INVENTORY til en anden klasse
+    // Bruges ved Main.getInventory();
     public static Inventory getInventory() {
         return INVENTORY;
     }
@@ -26,7 +29,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-
+        // Kort metode der fortæller navnet på en given font.
         var url = getClass().getResource("/app/fxinventory/Fonts/Brothers.ttf");
         System.out.println("Font URL: " + url); // should NOT be null
 

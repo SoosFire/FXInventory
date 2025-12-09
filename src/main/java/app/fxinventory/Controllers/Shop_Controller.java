@@ -170,10 +170,17 @@ public class Shop_Controller {
         buyButton.setOnAction(e -> {
             int cost = item.getCost();
             if (inventory.getGold() >= cost) {
-
-                shop.buyItem(inventory, itemName);
-                updateHud();
-
+                if ((inventory.getWeight() + item.getWeight()) <= inventory.getWeightLimit()) {
+                    shop.buyItem(inventory, itemName);
+                    updateHud();
+                }
+                else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Weight limit!");
+                    alert.setContentText("This item exceeds the weight limit!");
+                    alert.showAndWait();
+                }
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error");
@@ -226,7 +233,11 @@ public class Shop_Controller {
     }
 
     private void updateHud() {
-        gold_Label.setText(String.valueOf(inventory.getGold()));
-        weight_Label.setText(inventory.getWeight() + "/50");
+        if (gold_Label != null) {
+            gold_Label.setText(String.valueOf(inventory.getGold()));
+        }
+        if (weight_Label != null) {
+            weight_Label.setText(inventory.getWeight() + "/" +  inventory.getWeightLimit());
+        }
     }
 }

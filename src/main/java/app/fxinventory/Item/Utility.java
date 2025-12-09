@@ -16,8 +16,8 @@ public class Utility extends Item {
     public void setStackSize(int stackSize) {
         this.stackSize = stackSize;
     }
-    public void updateStackSize(int stackSize) {
-        this.stackSize = stackSize;
+    public void updateStackSize(int amount) {
+        this.stackSize += amount;
     }
 
     @Override
