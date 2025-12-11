@@ -237,7 +237,13 @@ public class Shop_Controller {
             gold_Label.setText(String.valueOf(inventory.getGold()));
         }
         if (weight_Label != null) {
-            weight_Label.setText(inventory.getWeight() + "/" +  inventory.getWeightLimit());
+            double w = inventory.getWeight();
+            if (Math.abs(w) < 1e-3) {
+                w = 0.0;
+            }
+            weight_Label.setText(
+                    String.format("%.1f/%d", w, inventory.getWeightLimit())
+            );
         }
     }
 }

@@ -11,7 +11,7 @@ public class Inventory {
     protected ArrayList<Item> inventory = new ArrayList<>();
     protected int gold = 11500;                 // Specificerer [gold] start amount
     protected double weight = 0;                // Specificerer [weight] start amount
-    protected double weightLimit = 5000;        // Specificerer [weightLimit] - Hvor meget plads kan vi maks have?
+    protected int weightLimit = 50;        // Specificerer [weightLimit] - Hvor meget plads kan vi maks have?
 
     public void addItemToInventory(Item item) {
         inventory.add(item);
@@ -50,7 +50,7 @@ public class Inventory {
         this.weight += itemWeight;
     }
 
-    public double getWeightLimit(){
+    public int getWeightLimit(){
         return  weightLimit;
     }
 }

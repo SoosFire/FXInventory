@@ -2,6 +2,8 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -47,9 +49,7 @@
             <Image url="@Images/arrowRed.png" />
         </image>
       </ImageView>
-      <Button layoutX="435.0" layoutY="688.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Weapon" onAction="#onFilterWeaponClick" />
-      <Button layoutX="540.0" layoutY="688.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Armor" />
-      <Button layoutX="645.0" layoutY="688.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Utility" />
-      <Button layoutX="750.0" layoutY="688.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Consumable" />
+      <MenuButton fx:id="weaponFilter_MenuButton" layoutX="612.0" layoutY="23.0" mnemonicParsing="false" text="MenuButton"/>
+      <MenuButton fx:id="itemTypeFilter_MenuButton" layoutX="500.0" layoutY="23.0" mnemonicParsing="false" text="MenuButton"/>
     </children>
 </AnchorPane>

@@ -1,6 +1,7 @@
 package app.fxinventory.Controllers;
 
 import app.fxinventory.Enums.ItemType;
+import app.fxinventory.Enums.WeaponSlotType;
 import app.fxinventory.Item.*;
 
 import app.fxinventory.Enums.ItemName;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -25,13 +27,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Inventory_Controller {
@@ -48,6 +48,12 @@ public class Inventory_Controller {
     private static final double SLOT_IMAGE_SIZE = 100;
     private static final double SLOT_BUTTON_WIDTH = 100;
     private static final double SLOT_BUTTON_HEIGHT = 50;
+
+    private ArrayList<Item> displayedItems = new ArrayList<>();
+
+    @FXML
+    private VBox container;
+    @FXML
 
     private Parent root;
     private Scene scene;
@@ -66,22 +72,35 @@ public class Inventory_Controller {
     private Label pageLabel;
 
     @FXML
+    MenuButton weaponFilter_MenuButton = new  MenuButton("Weapon Filter");
+
+    @FXML
+    MenuButton itemTypeFilter_MenuButton = new  MenuButton("Weapon Filter");
+
+    private MenuItem filter_one_handed = new MenuItem("One-Handed");
+    private MenuItem filter_two_handed = new MenuItem("Two-Handed");
+    private MenuItem filter_dual_handed = new MenuItem("Dual-Handed");
+    private MenuItem filter_ItemType_Weapon = new MenuItem("Weapon");
+    private MenuItem filter_ItemType_Armor = new MenuItem("Armor");
+    private MenuItem filter_ItemType_Utility = new MenuItem("Utility");
+    private MenuItem filter_ItemType_Consumable = new MenuItem("Consumable");
+
+    @FXML
     public void initialize() {
         updateHud();
-        buildInventory(0);
+        buildInventory(0,startDisplayInventory());
+        menuButtonFilter();
     }
 
-    private void buildInventory(int index) {
+    private void buildInventory(int index, ArrayList<Item> displayedItems) {
         inventoryVBox.getChildren().clear();
-
-        List<Item> items = inventory.getItems();
 
         for (int i = 0; i < ROWS; i++) {
             HBox row = new HBox(7);
             row.setAlignment(Pos.CENTER_LEFT);
 
             for (int j = 0; j < COLS; j++) {
-                Item item = index < items.size() ? items.get(index) : null;
+                Item item = index < displayedItems.size() ? displayedItems.get(index) : null;
                 VBox slot = createSlotCard(item);
                 row.getChildren().add(slot);
                 index++;
@@ -175,34 +194,49 @@ public class Inventory_Controller {
     public void onSlotSellClicked(Item item) {
         shop.sellItem(inventory, item);
         updateHud();
-        buildInventory(0);
+        displayedItems.clear();
+        startDisplayInventory();
+        buildInventory(0,displayedItems);
     }
+
+    ///////////////////////////////////////////////////////////
 
     private void updateHud() {
         if (gold_Label != null) {
             gold_Label.setText(String.valueOf(inventory.getGold()));
         }
         if (weight_Label != null) {
-            weight_Label.setText(inventory.getWeight() + "/" +  inventory.getWeightLimit());
+            double w = inventory.getWeight();
+            if (Math.abs(w) < 1e-3) {
+                w = 0.0;
+            }
+            weight_Label.setText(
+                    String.format("%.1f/%d", w, inventory.getWeightLimit())
+            );
         }
+
 
         pageLabel.setText(inventoryPage + "/" + 8);
     }
 
+    ////////////////////////////////////////////////////////
+
     @FXML
     public void onBackButton(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Main.class.getResource("Game_Home.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("Game_Home.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root,1000,750);
         stage.setScene(scene);
         stage.show();
     }
 
+    ////////////////////////////////////////////////////////
+
     @FXML
     public void onClickNextPage() {
         inventoryPage++;
         index = (inventoryPage - 1) * 24;
-        buildInventory(index);
+        buildInventory(index,displayedItems);
         updateHud();
     }
     @FXML
@@ -211,48 +245,119 @@ public class Inventory_Controller {
             inventoryPage--;
         }
         index = (inventoryPage - 1) * 24;
-        buildInventory(index);
+        buildInventory(index,displayedItems);
         updateHud();
     }
 
-    @FXML
-    public void onFilterWeaponClick (){
-        inventoryVBox.getChildren().clear();
 
-        index = 0;
-        ArrayList<Item> weapons = new ArrayList<>();
-
+    ////////////////////////////////////////////////////////
+    // Item Filter -> ItemType [Weapon]
+    public void onFilterWeaponClick (ItemType itemType) {
+        displayedItems.clear();
         for (Item item : inventory.getItems()) {
-            if (item.getType() == ItemType.WEAPON){
-                weapons.add(item);
+            if (item.getType() == itemType) {
+                displayedItems.add(item);
             }
         }
+        buildInventory(0,displayedItems);
+    }
 
-        for (int i = 0; i < ROWS; i++) {
-            HBox row = new HBox(7);
-            row.setAlignment(Pos.CENTER_LEFT);
-
-            for (int j = 0; j < COLS; j++) {
-                Item weapon = index < weapons.size() ? weapons.get(index) : null;
-                VBox slot = createSlotCard(weapon);
-                row.getChildren().add(slot);
-                index++;
+    // Item Filter -> ItemType [Armor]
+    public void onFilterArmorClick (ItemType itemType) {
+        displayedItems.clear();
+        for (Item item : inventory.getItems()) {
+            if (item.getType() == ItemType.ARMOR){
+                displayedItems.add(item);
             }
-
-            inventoryVBox.getChildren().add(row);
         }
-    }
-    @FXML
-    public void onFilterArmorClick (){
-
-    }
-    @FXML
-    public void onFilterUtilityClick (){
-
-    }
-    @FXML
-    public void onFilterConsumableClick (){
-
+        buildInventory(0,displayedItems);
     }
 
+    // Item Filter -> ItemType [Utility]
+    public void onFilterUtilityClick (ItemType itemType){
+        displayedItems.clear();
+        for (Item item : inventory.getItems()) {
+            if (item.getType() == ItemType.UTILITY){
+                displayedItems.add(item);
+            }
+        }
+        buildInventory(0,displayedItems);
+    }
+
+    // Item Filter -> ItemType [Consumable]
+    public void onFilterConsumableClick (ItemType itemType) {
+        displayedItems.clear();
+        for (Item item : inventory.getItems()) {
+            if (item.getType() == itemType){
+                displayedItems.add(item);
+            }
+        }
+        buildInventory(0,displayedItems);
+    }
+
+    // Weapon Filter -> ItemType [ONE_HANDED]
+    public void onFilterOneHanded (WeaponSlotType slotType) {
+        displayedItems.clear();
+        for (Item item : inventory.getItems()) {
+            if (item instanceof Weapon weapon)
+                if (weapon.getSlotType() == slotType) {
+                displayedItems.add(item);
+            }
+        }
+        buildInventory(0,displayedItems);
+    }
+
+    // Weapon Filter -> ItemType [TWO_HANDED]
+    public void onFilterTwoHanded (WeaponSlotType slotType) {
+        displayedItems.clear();
+        for (Item item : inventory.getItems()) {
+            if (item instanceof Weapon weapon)
+                if (weapon.getSlotType() == slotType) {
+                    displayedItems.add(item);
+                }
+        }
+        buildInventory(0,displayedItems);
+    }
+
+    // Weapon Filter -> ItemType [DUAL_HANDED]
+    public void onFilterDualHanded (WeaponSlotType slotType) {
+        displayedItems.clear();
+        for (Item item : inventory.getItems()) {
+            if (item instanceof Weapon weapon)
+                if (weapon.getSlotType() == slotType) {
+                    displayedItems.add(item);
+                }
+        }
+        buildInventory(0,displayedItems);
+    }
+
+
+    // Start items af ArrayList<Item> displayedItems
+    // Viser her hele inventory
+    private ArrayList<Item> startDisplayInventory () {
+        displayedItems.clear();
+        displayedItems.addAll(inventory.getItems());
+        return displayedItems;
+    }
+
+    // Opretter Actions for dropdown buttons i hver menuButton.
+    private void menuButtonFilter () {
+
+        // WeaponFilter_MenuButton -> Filterer for WeaponSlotType
+        // Sætter OnAction for hver dropdown-menu (MenuItem)
+        weaponFilter_MenuButton.getItems().clear();
+        weaponFilter_MenuButton.setText("Weapon Filter");
+        filter_one_handed.setOnAction(e -> onFilterOneHanded(WeaponSlotType.ONE_HANDED));           // -> Metode onFilterOneHanded(WeaponSlotType.ONE_HANDED)
+        filter_two_handed.setOnAction(e -> onFilterTwoHanded(WeaponSlotType.TWO_HANDED));           // -> Metode onFilterTwoHanded(WeaponSlotType.TWO_HANDED)
+        filter_dual_handed.setOnAction(e -> onFilterDualHanded(WeaponSlotType.DUAL_HANDED));        // -> Metode onFilterDualHanded(WeaponSlotType.DUAL_HANDED)
+        weaponFilter_MenuButton.getItems().addAll(filter_one_handed, filter_two_handed, filter_dual_handed);   // -> Tilføjer alle MenuItems til MenuButton.
+
+        itemTypeFilter_MenuButton.getItems().clear();
+        itemTypeFilter_MenuButton.setText("Item Type");
+        filter_ItemType_Weapon.setOnAction(e -> onFilterWeaponClick(ItemType.WEAPON));
+        filter_ItemType_Armor.setOnAction(e -> onFilterArmorClick(ItemType.ARMOR));
+        filter_ItemType_Utility.setOnAction(e -> onFilterUtilityClick(ItemType.UTILITY));
+        filter_ItemType_Consumable.setOnAction(e -> onFilterConsumableClick(ItemType.CONSUMABLE));
+        itemTypeFilter_MenuButton.getItems().addAll(filter_ItemType_Weapon, filter_ItemType_Armor, filter_ItemType_Utility, filter_ItemType_Consumable);
+    }
 }

@@ -28,8 +28,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        ////////////////////////////////////////////////////////
 
-        // Kort metode der fortæller navnet på en given font.
+        // Kort metode der fortæller navnet på en given font. //
+
+        /*
         var url = getClass().getResource("/app/fxinventory/Fonts/Brothers.ttf");
         System.out.println("Font URL: " + url); // should NOT be null
 
@@ -38,6 +41,9 @@ public class Main extends Application {
         if (f != null) {
             System.out.println("Font name to use in CSS: " + f.getName());
         }
+        */
+
+        ////////////////////////////////////////////////////////
 
         FXMLLoader loader = new FXMLLoader(
                 Main.class.getResource("Main.fxml"));
