@@ -1,5 +1,6 @@
 package app.fxinventory.Controllers;
 
+import app.fxinventory.Enums.ItemType;
 import app.fxinventory.Item.*;
 
 import app.fxinventory.Enums.ItemName;
@@ -16,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -23,10 +25,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -171,7 +175,7 @@ public class Inventory_Controller {
     public void onSlotSellClicked(Item item) {
         shop.sellItem(inventory, item);
         updateHud();
-        buildInventory(index);
+        buildInventory(0);
     }
 
     private void updateHud() {
@@ -210,4 +214,45 @@ public class Inventory_Controller {
         buildInventory(index);
         updateHud();
     }
+
+    @FXML
+    public void onFilterWeaponClick (){
+        inventoryVBox.getChildren().clear();
+
+        index = 0;
+        ArrayList<Item> weapons = new ArrayList<>();
+
+        for (Item item : inventory.getItems()) {
+            if (item.getType() == ItemType.WEAPON){
+                weapons.add(item);
+            }
+        }
+
+        for (int i = 0; i < ROWS; i++) {
+            HBox row = new HBox(7);
+            row.setAlignment(Pos.CENTER_LEFT);
+
+            for (int j = 0; j < COLS; j++) {
+                Item weapon = index < weapons.size() ? weapons.get(index) : null;
+                VBox slot = createSlotCard(weapon);
+                row.getChildren().add(slot);
+                index++;
+            }
+
+            inventoryVBox.getChildren().add(row);
+        }
+    }
+    @FXML
+    public void onFilterArmorClick (){
+
+    }
+    @FXML
+    public void onFilterUtilityClick (){
+
+    }
+    @FXML
+    public void onFilterConsumableClick (){
+
+    }
+
 }

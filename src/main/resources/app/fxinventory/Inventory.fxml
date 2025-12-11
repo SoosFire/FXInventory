@@ -34,18 +34,22 @@
             <Image url="@Images/X.png" />
          </image>
       </ImageView>
-        <Button layoutX="390.0" layoutY="690.0" onAction="#onClickPreviousPage" opacity="0.0" prefHeight="30.0" prefWidth="60.0" />
-        <Button layoutX="495.0" layoutY="690.0" onAction="#onClickNextPage" opacity="0.0" prefHeight="30.0" prefWidth="60.0" />
+        <Button layoutX="212.0" layoutY="689.0" onAction="#onClickPreviousPage" opacity="0.0" prefHeight="30.0" prefWidth="60.0" />
+        <Button layoutX="317.0" layoutY="689.0" onAction="#onClickNextPage" opacity="0.0" prefHeight="30.0" prefWidth="60.0" />
       <Label fx:id="pageLabel" layoutX="57.0" layoutY="675.0" prefHeight="25.0" prefWidth="75.0" styleClass="description-label" text="" />
-      <ImageView disable="true" fitHeight="30.0" fitWidth="50.0" layoutX="400.0" layoutY="689.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 180;">
+      <ImageView disable="true" fitHeight="30.0" fitWidth="50.0" layoutX="222.0" layoutY="688.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 180;">
         <image>
             <Image url="@Images/arrowRed.png" />
         </image>
         </ImageView>
-      <ImageView disable="true" fitHeight="30.0" fitWidth="50.0" layoutX="505.0" layoutY="689.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView disable="true" fitHeight="30.0" fitWidth="50.0" layoutX="327.0" layoutY="688.0" pickOnBounds="true" preserveRatio="true">
         <image>
             <Image url="@Images/arrowRed.png" />
         </image>
       </ImageView>
+      <Button layoutX="435.0" layoutY="688.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Weapon" onAction="#onFilterWeaponClick" />
+      <Button layoutX="540.0" layoutY="688.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Armor" />
+      <Button layoutX="645.0" layoutY="688.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Utility" />
+      <Button layoutX="750.0" layoutY="688.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #4f4f4f" styleClass="item_description" text="Consumable" />
     </children>
 </AnchorPane>
