@@ -36,31 +36,59 @@ import java.util.Objects;
 
 public class Inventory_Controller {
 
+    //--------------------------------------------------------------//
+    //  Import of Inventory and Shop
+    //--------------------------------------------------------------//
+
     private final Inventory inventory = Main.getInventory();
     private final Shop shop = Main.getShop();
 
+    //--------------------------------------------------------------//
+    //  Build Shop Measurements
     // 3 rows x 6 columns = 18 slots total
+    //--------------------------------------------------------------//
     private static final int ROWS = 3;
     private static final int COLS = 8;
+
+    //--------------------------------------------------------------//
+    //  Change Inventory Page
+    //--------------------------------------------------------------//
+
     private  int index = 0;
     private  int inventoryPage = 1;
 
+    //--------------------------------------------------------------//
+    //  Card Measurements
+    //--------------------------------------------------------------//
     private static final double SLOT_IMAGE_SIZE = 100;
     private static final double SLOT_BUTTON_WIDTH = 100;
     private static final double SLOT_BUTTON_HEIGHT = 50;
 
+    //--------------------------------------------------------------//
+    //  ArrayList
+    //--------------------------------------------------------------//
+
     private ArrayList<Item> displayedItems = new ArrayList<>();
 
-    @FXML
-    private VBox container;
-    @FXML
+    //--------------------------------------------------------------//
+    //  Scene Change
+    //--------------------------------------------------------------//
 
+    @FXML
     private Parent root;
     private Scene scene;
     private Stage stage;
 
+    //--------------------------------------------------------------//
+    //  VBox
+    //--------------------------------------------------------------//
+
     @FXML
     private VBox inventoryVBox;
+
+    //--------------------------------------------------------------//
+    //  Labels
+    //--------------------------------------------------------------//
 
     @FXML
     private Label gold_Label;
@@ -71,12 +99,18 @@ public class Inventory_Controller {
     @FXML
     private Label pageLabel;
 
+    //--------------------------------------------------------------//
+    //  MenuButtons
+    //--------------------------------------------------------------//
     @FXML
     MenuButton weaponFilter_MenuButton = new  MenuButton("Weapon Filter");
 
     @FXML
     MenuButton itemTypeFilter_MenuButton = new  MenuButton("Weapon Filter");
 
+    //--------------------------------------------------------------//
+    //  MenuItems
+    //--------------------------------------------------------------//
     private MenuItem filter_one_handed = new MenuItem("One-Handed");
     private MenuItem filter_two_handed = new MenuItem("Two-Handed");
     private MenuItem filter_dual_handed = new MenuItem("Dual-Handed");
@@ -85,6 +119,9 @@ public class Inventory_Controller {
     private MenuItem filter_ItemType_Utility = new MenuItem("Utility");
     private MenuItem filter_ItemType_Consumable = new MenuItem("Consumable");
 
+    //--------------------------------------------------------------//
+    //  Initialize (Start af programmet)
+    //--------------------------------------------------------------//
     @FXML
     public void initialize() {
         updateHud();
@@ -92,6 +129,9 @@ public class Inventory_Controller {
         menuButtonFilter();
     }
 
+    //--------------------------------------------------------------//
+    //  Build Shop
+    //--------------------------------------------------------------//
     private void buildInventory(int index, ArrayList<Item> displayedItems) {
         inventoryVBox.getChildren().clear();
 
@@ -110,6 +150,9 @@ public class Inventory_Controller {
         }
     }
 
+    //--------------------------------------------------------------//
+    //  Slot Card
+    //--------------------------------------------------------------//
     private VBox createSlotCard(Item item) {
         // Outer card for a single slot
         VBox card = new VBox(3);
@@ -189,7 +232,9 @@ public class Inventory_Controller {
         return card;
     }
 
-    // TO DO
+    //--------------------------------------------------------------//
+    //  SELL Button
+    //--------------------------------------------------------------//
     @FXML
     public void onSlotSellClicked(Item item) {
         shop.sellItem(inventory, item);
@@ -199,7 +244,9 @@ public class Inventory_Controller {
         buildInventory(0,displayedItems);
     }
 
-    ///////////////////////////////////////////////////////////
+    //--------------------------------------------------------------//
+    //  Update HUD
+    //--------------------------------------------------------------//
 
     private void updateHud() {
         if (gold_Label != null) {
@@ -219,7 +266,9 @@ public class Inventory_Controller {
         pageLabel.setText(inventoryPage + "/" + 8);
     }
 
-    ////////////////////////////////////////////////////////
+    //--------------------------------------------------------------//
+    //  Back Button
+    //--------------------------------------------------------------//
 
     @FXML
     public void onBackButton(ActionEvent event) throws IOException {
@@ -230,7 +279,10 @@ public class Inventory_Controller {
         stage.show();
     }
 
-    ////////////////////////////////////////////////////////
+    //--------------------------------------------------------------//
+    //  Inventory Page
+    //  Next / Previous
+    //--------------------------------------------------------------//
 
     @FXML
     public void onClickNextPage() {
@@ -250,7 +302,10 @@ public class Inventory_Controller {
     }
 
 
-    ////////////////////////////////////////////////////////
+    //--------------------------------------------------------------//
+    //  Item Filter
+    //--------------------------------------------------------------//
+
     // Item Filter -> ItemType [Weapon]
     public void onFilterWeaponClick (ItemType itemType) {
         displayedItems.clear();
@@ -295,6 +350,10 @@ public class Inventory_Controller {
         buildInventory(0,displayedItems);
     }
 
+    //--------------------------------------------------------------//
+    //  Weapon Filter
+    //--------------------------------------------------------------//
+
     // Weapon Filter -> ItemType [ONE_HANDED]
     public void onFilterOneHanded (WeaponSlotType slotType) {
         displayedItems.clear();
@@ -331,33 +390,45 @@ public class Inventory_Controller {
         buildInventory(0,displayedItems);
     }
 
+    //--------------------------------------------------------------//
+    //  Start Display
+    //--------------------------------------------------------------//
 
-    // Start items af ArrayList<Item> displayedItems
-    // Viser her hele inventory
     private ArrayList<Item> startDisplayInventory () {
         displayedItems.clear();
         displayedItems.addAll(inventory.getItems());
         return displayedItems;
     }
 
-    // Opretter Actions for dropdown buttons i hver menuButton.
+    //--------------------------------------------------------------//
+    //  MenuButton Initializer
+    //--------------------------------------------------------------//
+
     private void menuButtonFilter () {
 
-        // WeaponFilter_MenuButton -> Filterer for WeaponSlotType
+        // weaponFilter_MenuButton -> Filterer for WeaponSlotType
         // Sætter OnAction for hver dropdown-menu (MenuItem)
         weaponFilter_MenuButton.getItems().clear();
         weaponFilter_MenuButton.setText("Weapon Filter");
         filter_one_handed.setOnAction(e -> onFilterOneHanded(WeaponSlotType.ONE_HANDED));           // -> Metode onFilterOneHanded(WeaponSlotType.ONE_HANDED)
         filter_two_handed.setOnAction(e -> onFilterTwoHanded(WeaponSlotType.TWO_HANDED));           // -> Metode onFilterTwoHanded(WeaponSlotType.TWO_HANDED)
         filter_dual_handed.setOnAction(e -> onFilterDualHanded(WeaponSlotType.DUAL_HANDED));        // -> Metode onFilterDualHanded(WeaponSlotType.DUAL_HANDED)
-        weaponFilter_MenuButton.getItems().addAll(filter_one_handed, filter_two_handed, filter_dual_handed);   // -> Tilføjer alle MenuItems til MenuButton.
+        // -> Tilføjer alle MenuItems til weaponFilter_MenuButton
+        weaponFilter_MenuButton.getItems().addAll(filter_one_handed, filter_two_handed, filter_dual_handed);
 
+        // itemTypeFilter_MenuButton -> Filterer for WeaponSlotType
+        // Sætter OnAction for hver dropdown-menu (MenuItem)
+        // MenuItem #1 -> filter_ItemType_Weapon
+        // MenuItem #2 -> filter_ItemType_Armor
+        // MenuItem #3 -> filter_ItemType_Utility
+        // MenuItem #4 -> filter_ItemType_Consumable
         itemTypeFilter_MenuButton.getItems().clear();
         itemTypeFilter_MenuButton.setText("Item Type");
-        filter_ItemType_Weapon.setOnAction(e -> onFilterWeaponClick(ItemType.WEAPON));
-        filter_ItemType_Armor.setOnAction(e -> onFilterArmorClick(ItemType.ARMOR));
-        filter_ItemType_Utility.setOnAction(e -> onFilterUtilityClick(ItemType.UTILITY));
-        filter_ItemType_Consumable.setOnAction(e -> onFilterConsumableClick(ItemType.CONSUMABLE));
+        filter_ItemType_Weapon.setOnAction(e -> onFilterWeaponClick(ItemType.WEAPON));              // -> Metode onFilterWeaponClick(ItemType.WEAPON)
+        filter_ItemType_Armor.setOnAction(e -> onFilterArmorClick(ItemType.ARMOR));                 // -> Metode onFilterArmorClick(ItemType.ARMOR)
+        filter_ItemType_Utility.setOnAction(e -> onFilterUtilityClick(ItemType.UTILITY));           // -> Metode onFilterUtilityClick(ItemType.UTILITY)
+        filter_ItemType_Consumable.setOnAction(e -> onFilterConsumableClick(ItemType.CONSUMABLE));  // -> Metode onFilterConsumableClick(ItemType.CONSUMABLE)
+        // -> Tilføjer alle MenuItems til itemTypeFilter_MenuButton
         itemTypeFilter_MenuButton.getItems().addAll(filter_ItemType_Weapon, filter_ItemType_Armor, filter_ItemType_Utility, filter_ItemType_Consumable);
     }
 }
