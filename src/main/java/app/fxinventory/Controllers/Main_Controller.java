@@ -1,6 +1,8 @@
 package app.fxinventory.Controllers;
 
+import app.fxinventory.Inventory.Inventory;
 import app.fxinventory.Main;
+import app.fxinventory.Shop.Shop;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,13 +22,22 @@ public class Main_Controller {
     private Stage stage;
     private Scene scene;
 
+    private Inventory inventory;
+    private Shop shop;
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
     @FXML
     protected void onStartGame(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Main.class.getResource("Game_Home.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root,1000,750);
-        stage.setScene(scene);
-        stage.show();
-
+        SceneNavigator.switchTo(event, "Game_Home.fxml", (Game_Home_Controller c) -> {
+            c.setInventory(inventory);
+            c.setShop(shop);
+        });
     }
 }

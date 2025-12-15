@@ -40,8 +40,8 @@ public class Inventory_Controller {
     //  Import of Inventory and Shop
     //--------------------------------------------------------------//
 
-    private final Inventory inventory = Main.getInventory();
-    private final Shop shop = Main.getShop();
+    private Inventory inventory;
+    private Shop shop;
 
     //--------------------------------------------------------------//
     //  Build Shop Measurements
@@ -124,9 +124,17 @@ public class Inventory_Controller {
     //--------------------------------------------------------------//
     @FXML
     public void initialize() {
+        menuButtonFilter();
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
         updateHud();
         buildInventory(0,startDisplayInventory());
-        menuButtonFilter();
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     //--------------------------------------------------------------//
@@ -272,11 +280,10 @@ public class Inventory_Controller {
 
     @FXML
     public void onBackButton(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("Game_Home.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root,1000,750);
-        stage.setScene(scene);
-        stage.show();
+        SceneNavigator.switchTo(event, "Game_Home.fxml", (Game_Home_Controller c) -> {
+            c.setInventory(inventory);
+            c.setShop(shop);
+        });
     }
 
     //--------------------------------------------------------------//
@@ -306,41 +313,7 @@ public class Inventory_Controller {
     //  Item Filter
     //--------------------------------------------------------------//
 
-    // Item Filter -> ItemType [Weapon]
-    public void onFilterWeaponClick (ItemType itemType) {
-        displayedItems.clear();
-        for (Item item : inventory.getItems()) {
-            if (item.getType() == itemType) {
-                displayedItems.add(item);
-            }
-        }
-        buildInventory(0,displayedItems);
-    }
-
-    // Item Filter -> ItemType [Armor]
-    public void onFilterArmorClick (ItemType itemType) {
-        displayedItems.clear();
-        for (Item item : inventory.getItems()) {
-            if (item.getType() == ItemType.ARMOR){
-                displayedItems.add(item);
-            }
-        }
-        buildInventory(0,displayedItems);
-    }
-
-    // Item Filter -> ItemType [Utility]
-    public void onFilterUtilityClick (ItemType itemType){
-        displayedItems.clear();
-        for (Item item : inventory.getItems()) {
-            if (item.getType() == ItemType.UTILITY){
-                displayedItems.add(item);
-            }
-        }
-        buildInventory(0,displayedItems);
-    }
-
-    // Item Filter -> ItemType [Consumable]
-    public void onFilterConsumableClick (ItemType itemType) {
+    public void filterByItemType(ItemType itemType) {
         displayedItems.clear();
         for (Item item : inventory.getItems()) {
             if (item.getType() == itemType){
@@ -354,32 +327,7 @@ public class Inventory_Controller {
     //  Weapon Filter
     //--------------------------------------------------------------//
 
-    // Weapon Filter -> ItemType [ONE_HANDED]
-    public void onFilterOneHanded (WeaponSlotType slotType) {
-        displayedItems.clear();
-        for (Item item : inventory.getItems()) {
-            if (item instanceof Weapon weapon)
-                if (weapon.getSlotType() == slotType) {
-                displayedItems.add(item);
-            }
-        }
-        buildInventory(0,displayedItems);
-    }
-
-    // Weapon Filter -> ItemType [TWO_HANDED]
-    public void onFilterTwoHanded (WeaponSlotType slotType) {
-        displayedItems.clear();
-        for (Item item : inventory.getItems()) {
-            if (item instanceof Weapon weapon)
-                if (weapon.getSlotType() == slotType) {
-                    displayedItems.add(item);
-                }
-        }
-        buildInventory(0,displayedItems);
-    }
-
-    // Weapon Filter -> ItemType [DUAL_HANDED]
-    public void onFilterDualHanded (WeaponSlotType slotType) {
+    public void filterByWeaponSlot (WeaponSlotType slotType){
         displayedItems.clear();
         for (Item item : inventory.getItems()) {
             if (item instanceof Weapon weapon)
@@ -406,29 +354,22 @@ public class Inventory_Controller {
 
     private void menuButtonFilter () {
 
-        // weaponFilter_MenuButton -> Filterer for WeaponSlotType
-        // Sætter OnAction for hver dropdown-menu (MenuItem)
         weaponFilter_MenuButton.getItems().clear();
         weaponFilter_MenuButton.setText("Weapon Filter");
-        filter_one_handed.setOnAction(e -> onFilterOneHanded(WeaponSlotType.ONE_HANDED));           // -> Metode onFilterOneHanded(WeaponSlotType.ONE_HANDED)
-        filter_two_handed.setOnAction(e -> onFilterTwoHanded(WeaponSlotType.TWO_HANDED));           // -> Metode onFilterTwoHanded(WeaponSlotType.TWO_HANDED)
-        filter_dual_handed.setOnAction(e -> onFilterDualHanded(WeaponSlotType.DUAL_HANDED));        // -> Metode onFilterDualHanded(WeaponSlotType.DUAL_HANDED)
-        // -> Tilføjer alle MenuItems til weaponFilter_MenuButton
+
+        filter_one_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.ONE_HANDED));           // -> Metode onFilterOneHanded(WeaponSlotType.ONE_HANDED)
+        filter_two_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.TWO_HANDED));           // -> Metode onFilterTwoHanded(WeaponSlotType.TWO_HANDED)
+        filter_dual_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.DUAL_HANDED));        // -> Metode onFilterDualHanded(WeaponSlotType.DUAL_HANDED)
+
         weaponFilter_MenuButton.getItems().addAll(filter_one_handed, filter_two_handed, filter_dual_handed);
 
-        // itemTypeFilter_MenuButton -> Filterer for WeaponSlotType
-        // Sætter OnAction for hver dropdown-menu (MenuItem)
-        // MenuItem #1 -> filter_ItemType_Weapon
-        // MenuItem #2 -> filter_ItemType_Armor
-        // MenuItem #3 -> filter_ItemType_Utility
-        // MenuItem #4 -> filter_ItemType_Consumable
         itemTypeFilter_MenuButton.getItems().clear();
         itemTypeFilter_MenuButton.setText("Item Type");
-        filter_ItemType_Weapon.setOnAction(e -> onFilterWeaponClick(ItemType.WEAPON));              // -> Metode onFilterWeaponClick(ItemType.WEAPON)
-        filter_ItemType_Armor.setOnAction(e -> onFilterArmorClick(ItemType.ARMOR));                 // -> Metode onFilterArmorClick(ItemType.ARMOR)
-        filter_ItemType_Utility.setOnAction(e -> onFilterUtilityClick(ItemType.UTILITY));           // -> Metode onFilterUtilityClick(ItemType.UTILITY)
-        filter_ItemType_Consumable.setOnAction(e -> onFilterConsumableClick(ItemType.CONSUMABLE));  // -> Metode onFilterConsumableClick(ItemType.CONSUMABLE)
-        // -> Tilføjer alle MenuItems til itemTypeFilter_MenuButton
+        filter_ItemType_Weapon.setOnAction(e -> filterByItemType(ItemType.WEAPON));              // -> Metode onFilterWeaponClick(ItemType.WEAPON)
+        filter_ItemType_Armor.setOnAction(e -> filterByItemType(ItemType.ARMOR));                 // -> Metode onFilterArmorClick(ItemType.ARMOR)
+        filter_ItemType_Utility.setOnAction(e -> filterByItemType(ItemType.UTILITY));           // -> Metode onFilterUtilityClick(ItemType.UTILITY)
+        filter_ItemType_Consumable.setOnAction(e -> filterByItemType(ItemType.CONSUMABLE));  // -> Metode onFilterConsumableClick(ItemType.CONSUMABLE)
+
         itemTypeFilter_MenuButton.getItems().addAll(filter_ItemType_Weapon, filter_ItemType_Armor, filter_ItemType_Utility, filter_ItemType_Consumable);
     }
 }

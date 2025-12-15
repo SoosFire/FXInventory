@@ -98,5 +98,5 @@ public class Shop {
             // ---------- Non-stackable: Weapon / Armor / other ----------
             // For Weapon/Armor you just sell/remove the whole item:
             inventory.removeItem(item);
-        }
+    }
 }

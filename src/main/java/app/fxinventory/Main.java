@@ -1,9 +1,12 @@
 package app.fxinventory;
 
+import app.fxinventory.Controllers.Game_Home_Controller;
+import app.fxinventory.Controllers.Main_Controller;
 import app.fxinventory.Inventory.Inventory;
 import app.fxinventory.Shop.Shop;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
@@ -12,46 +15,25 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    // Oprettelse af INVENTORY og SHOP
-    private static final Inventory INVENTORY = new Inventory();
-    private static final Shop SHOP = new Shop();
-
-    // Metode til at passe INVENTORY til en anden klasse
-    // Bruges ved Main.getInventory();
-    public static Inventory getInventory() {
-        return INVENTORY;
-    }
-
-    public static Shop getShop() {
-        return SHOP;
-    }
-
     @Override
     public void start(Stage stage) throws IOException {
-        ////////////////////////////////////////////////////////
+        // Create shared objects
+        Inventory inventory = new Inventory();
+        Shop shop = new Shop();
 
-        // Kort metode der fortæller navnet på en given font. //
+        // Load first screen
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("Main.fxml"));
+        Parent root = loader.load();
 
-        /*
-        var url = getClass().getResource("/app/fxinventory/Fonts/Brothers.ttf");
-        System.out.println("Font URL: " + url); // should NOT be null
+        // Inject dependencies
+        Main_Controller controller = loader.getController();
+        controller.setInventory(inventory);
+        controller.setShop(shop);
 
-        Font f = Font.loadFont(url.toExternalForm(), 20);
-        System.out.println("Loaded font: " + f);
-        if (f != null) {
-            System.out.println("Font name to use in CSS: " + f.getName());
-        }
-        */
-
-        ////////////////////////////////////////////////////////
-
-        FXMLLoader loader = new FXMLLoader(
-                Main.class.getResource("Main.fxml"));
-
-        Scene scene = new Scene(loader.load(), 1000, 750);
-        stage.setTitle("Legend of CodeCraft");
+        // Show stage
+        Scene scene = new Scene(root, 1000, 750);
         stage.setScene(scene);
-        stage.setResizable(false);
         stage.show();
     }
+
 }

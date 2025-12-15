@@ -25,7 +25,8 @@
          </image></ImageView>
       <Button layoutX="52.0" layoutY="250.0" mnemonicParsing="false" onAction="#showInventoryScene" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black;" styleClass="main-buttons" text="Inventory" />
       <Button layoutX="52.0" layoutY="340.0" mnemonicParsing="false" onAction="#showShopScene" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black;" styleClass="main-buttons" text="Shop" />
-      <Button layoutX="52.0" layoutY="430.0" mnemonicParsing="false" onAction="#giveGold" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black;" styleClass="main-buttons" text="Add Gold" />
+      <Button layoutX="52.0" layoutY="520.0" mnemonicParsing="false" onAction="#giveGold" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black;" styleClass="main-buttons" text="Add Gold" />
       <Line endX="182.5" layoutX="153.0" layoutY="162.0" startX="-100.0" />
+      <Button layoutX="52.0" layoutY="430.0" mnemonicParsing="false" onAction="#showUpgradeScene" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: #4f4f4f; -fx-border-color: black;" styleClass="main-buttons" text="Upgrades" />
    </children>
 </AnchorPane>

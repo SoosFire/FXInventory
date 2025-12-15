@@ -32,12 +32,12 @@ import java.util.Random;
 
 public class Shop_Controller {
 
+    private Inventory inventory;
+    private Shop shop;
+
     private Parent root;
     private Scene scene;
     private Stage stage;
-
-    private final Inventory inventory = Main.getInventory();
-    private final Shop shop = Main.getShop();
 
     private static final int ROWS = 3;
     private static final int COLS = 3;
@@ -61,19 +61,22 @@ public class Shop_Controller {
     @FXML
     private VBox shopVBox;
 
-    @FXML
-    public void initialize() {
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
         updateHud();
         buildShop();
     }
 
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
     @FXML
     public void onBackButton(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Main.class.getResource("Game_Home.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root,1000,750);
-        stage.setScene(scene);
-        stage.show();
+        SceneNavigator.switchTo(event, "Game_Home.fxml", (Game_Home_Controller c) -> {
+            c.setInventory(inventory);
+            c.setShop(shop);
+        });
     }
 
     public void buildShop () {
@@ -105,7 +108,7 @@ public class Shop_Controller {
         card.setAlignment(Pos.CENTER_LEFT);
         card.setPadding(new Insets(5, 5, 5, 5));
 
-        // ---- NEW: set background image ----
+
         Image bgImage = new Image(
                 Objects.requireNonNull(
                         getClass().getResource("/app/fxinventory/Images/barmid_ready.png")
@@ -114,8 +117,8 @@ public class Shop_Controller {
 
         BackgroundSize bgSize = new BackgroundSize(
                 CARD_WIDTH, CARD_HEIGHT,
-                false, false,   // percentage
-                false, false   // cover = true
+                false, false,
+                false, false
         );
 
 
@@ -163,7 +166,7 @@ public class Shop_Controller {
         buyButton.setPrefWidth(BUY_BUTTON_WIDTH - 20);
         buyButton.setMinWidth(BUY_BUTTON_WIDTH);
         buyButton.setMaxWidth(BUY_BUTTON_WIDTH);
-        buyButton.setPrefHeight(CARD_HEIGHT - 20); // a bit smaller than card
+        buyButton.setPrefHeight(CARD_HEIGHT - 20);
         buyButton.setAlignment(Pos.CENTER);
         buyButton.setOpacity(0);
 
@@ -171,8 +174,16 @@ public class Shop_Controller {
             int cost = item.getCost();
             if (inventory.getGold() >= cost) {
                 if ((inventory.getWeight() + item.getWeight()) <= inventory.getWeightLimit()) {
-                    shop.buyItem(inventory, itemName);
-                    updateHud();
+                    if (inventory.getCurrentSlotUsed() < inventory.getAvailableSlots()){
+                        shop.buyItem(inventory, itemName);
+                        updateHud();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Slot limit reached!");
+                        alert.setContentText("You dont have enough space to buy this item!");
+                        alert.showAndWait();
+                    }
                 }
                 else {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
