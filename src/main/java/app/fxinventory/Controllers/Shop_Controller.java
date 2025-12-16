@@ -56,6 +56,8 @@ public class Shop_Controller {
     @FXML
     private Label weight_Label;
     @FXML
+    private Label slots_Label;
+    @FXML
     private TextArea inventory_TextArea;
 
     @FXML
@@ -255,6 +257,9 @@ public class Shop_Controller {
             weight_Label.setText(
                     String.format("%.1f/%d", w, inventory.getWeightLimit())
             );
+        }
+        if (slots_Label != null) {
+            slots_Label.setText(String.valueOf(inventory.getCurrentSlotUsed()) + "/" + String.valueOf(inventory.getAvailableSlots()));
         }
     }
 }

@@ -98,6 +98,8 @@ public class Inventory_Controller {
 
     @FXML
     private Label pageLabel;
+    @FXML
+    private Label slots_Label;
 
     //--------------------------------------------------------------//
     //  MenuButtons
@@ -268,6 +270,9 @@ public class Inventory_Controller {
             weight_Label.setText(
                     String.format("%.1f/%d", w, inventory.getWeightLimit())
             );
+        }
+        if (slots_Label != null) {
+            slots_Label.setText(String.valueOf(inventory.getCurrentSlotUsed()) + "/" + String.valueOf(inventory.getAvailableSlots()));
         }
 
 

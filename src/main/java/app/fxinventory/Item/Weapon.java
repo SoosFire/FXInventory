@@ -7,11 +7,10 @@ public class Weapon extends Item {
     private WeaponSlotType slotType;
 
     // Oprettelse af ny Weapons instans med given attributter
-    public Weapon (String name, double weight, int cost, int damage, ItemType itemType, WeaponSlotType slotType, int totalAmount) {
-        super(name, weight, cost, itemType, totalAmount);
+    public Weapon (String name, double weight, int cost, int damage, ItemType itemType, WeaponSlotType slotType) {
+        super(name, weight, cost, itemType);
         this.damage = damage;
         this.slotType = slotType;
-
     }
 
     // Returnerer slotType
@@ -32,7 +31,7 @@ public class Weapon extends Item {
     // Laver en ny instans af Weapon.
     @Override
     public Item createInstance () {
-        return new Weapon(name,weight,cost,damage,type,slotType,totalAmount  );
+        return new Weapon(name,weight,cost,damage,type,slotType);
     }
 
 }

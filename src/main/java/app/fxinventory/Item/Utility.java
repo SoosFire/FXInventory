@@ -5,8 +5,8 @@ import app.fxinventory.Enums.*;
 public class Utility extends Item {
     private int stackSize;
 
-    public Utility(String name, double weight, int cost, ItemType type, int stackSize, int totalAmount) {
-        super(name, weight, cost, type, totalAmount);
+    public Utility(String name, double weight, int cost, ItemType type, int stackSize) {
+        super(name, weight, cost, type);
         this.stackSize = stackSize;
     }
 
@@ -22,6 +22,6 @@ public class Utility extends Item {
 
     @Override
     public Item createInstance() {
-        return new Utility(name, weight, cost, type, stackSize, totalAmount);
+        return new Utility(name, weight, cost, type, stackSize);
     }
 }

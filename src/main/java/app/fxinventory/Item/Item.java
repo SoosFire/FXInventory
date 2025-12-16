@@ -8,14 +8,12 @@ public abstract class Item {
     protected double weight;
     protected int cost;
     protected ItemType type;
-    protected int totalAmount;
 
-    public Item(String name, double weight, int cost, ItemType type, int totalAmount) {
+    public Item(String name, double weight, int cost, ItemType type) {
         this.name = name;
         this.weight = weight;
         this.cost = cost;
         this.type = type;
-        this.totalAmount = totalAmount;
     }
 
     public String getName() {
@@ -34,12 +32,7 @@ public abstract class Item {
         return type;
     }
 
-    public int getTotalAmount() {
-        return totalAmount;
-    }
-
     public void updateTotalAmount(int amount) {
-        this.totalAmount += amount;
     }
 
     public abstract Item createInstance();

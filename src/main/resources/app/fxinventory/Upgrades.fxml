@@ -22,7 +22,7 @@
       </ImageView>
       <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="792.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@Images/Weight_Icon.png" />
+            <Image url="@Images/weight.png" />
          </image>
       </ImageView>
        <Line endX="182.5" layoutX="153.0" layoutY="162.0" startX="-100.0" />
@@ -32,10 +32,25 @@
                <Image url="@Images/X.png" />
            </image>
        </ImageView>
-      <Button layoutX="53.0" layoutY="210.0" mnemonicParsing="false" prefHeight="90.0" prefWidth="250.0" onAction="#onUpgradeSlotOne" />
-      <Label layoutX="70.0" layoutY="215.0" text="Upgrade inventory size" />
-      <Label fx:id="slotUpgradeCost_Label" layoutX="70.0" layoutY="235.0" text="Cost" />
-      <Label fx:id="slotUpgradeLevel_Label" layoutX="70.0" layoutY="255.0" text="Level" />
-      <Label fx:id="slotUpgradeEffect_Label" layoutX="70.0" layoutY="275.0" text="Effect" />
+      <Button layoutX="53.0" layoutY="335.0" mnemonicParsing="false" onAction="#onUpgradeSlotOne" prefHeight="90.0" prefWidth="250.0" style="-fx-border-color: #FFFFFF" styleClass="name_card" />
+      <Label fx:id="SlotUpgradeOne_Name_Label" layoutX="70.0" layoutY="345.0" styleClass="item_description" text="Slot Upgrade: I" />
+      <Label fx:id="SlotUpgradeOne_Price_Label" layoutX="70.0" layoutY="367.0" styleClass="item_description" text="Cost: 300 Guld" />
+      <Label fx:id="SlotUpgradeOne_Effect_Label" layoutX="70.0" layoutY="395.0" styleClass="item_description" text="Effect: +30 slots" />
+      <Button layoutX="53.0" layoutY="436.0" mnemonicParsing="false" onAction="#onUpgradeSlotTwo" prefHeight="90.0" prefWidth="250.0" style="-fx-border-color: #FFFFFF" styleClass="name_card" />
+      <Label fx:id="SlotUpgradeTwo_Name_Label" layoutX="70.0" layoutY="446.0" styleClass="item_description" text="Slot Upgrade: II" />
+      <Label fx:id="SlotUpgradeTwo_Price_Label" layoutX="70.0" layoutY="468.0" styleClass="item_description" text="Cost: 1000 Guld" />
+      <Label fx:id="SlotUpgradeTwo_Effect_Label" layoutX="70.0" layoutY="496.0" styleClass="item_description" text="Effect: +50 slots" />
+      <Button layoutX="53.0" layoutY="538.0" mnemonicParsing="false" onAction="#onUpgradeSlotThree" prefHeight="90.0" prefWidth="250.0" style="-fx-border-color: #FFFFFF" styleClass="name_card" />
+      <Label fx:id="SlotUpgradeThree_Name_Label" layoutX="70.0" layoutY="548.0" styleClass="item_description" text="Slot Upgrade: III" />
+      <Label fx:id="SlotUpgradeThree_Price_Label" layoutX="70.0" layoutY="570.0" styleClass="item_description" text="Cost: 2500 Guld" />
+      <Label fx:id="SlotUpgradeThree_Effect_Label" layoutX="70.0" layoutY="598.0" styleClass="item_description" text="Effect: +80 slots" />
+      <Label layoutX="53.0" layoutY="246.0" styleClass="upgrade_title_description" text="Inventory Slot Upgrades" />
+      <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#4f4f4f" height="50.0" layoutX="786.0" layoutY="124.0" stroke="BLACK" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="3.0" style="-fx-background-color: #4f4f4f" width="200.0" />
+      <Label fx:id="slots_Label" layoutX="885.0" layoutY="136.0" styleClass="description-label" text="Slots" />
+      <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="792.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/Backpack.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

@@ -6,8 +6,8 @@ public class Consumable extends Item{
 
     private int stackSize;
 
-    public Consumable(String name, double weight, int cost, ItemType type, int stackSize, int totalAmount) {
-        super(name, weight, cost, type, totalAmount);
+    public Consumable(String name, double weight, int cost, ItemType type, int stackSize) {
+        super(name, weight, cost, type);
         this.stackSize = stackSize;
     }
 
@@ -23,6 +23,6 @@ public class Consumable extends Item{
 
     @Override
     public Item createInstance() {
-        return new Consumable(name,weight,cost,type,stackSize,totalAmount);
+        return new Consumable(name,weight,cost,type,stackSize);
     }
 }

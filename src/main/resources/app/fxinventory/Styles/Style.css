@@ -47,6 +47,18 @@
     -fx-text-fill: #FFFFFF;
 }
 
+.upgrade_description {
+    -fx-font-family: "Brothers Circus Regular";
+    -fx-font-size: 12;
+    -fx-text-fill: #000000;
+}
+
+.upgrade_title_description {
+    -fx-font-family: "Brothers Circus Regular";
+    -fx-font-size: 20;
+    -fx-text-fill: #FFFFFF;
+}
+
 .background {
     -fx-background-image: url("../Images/background_frame.png");
     -fx-background-repeat: no-repeat;

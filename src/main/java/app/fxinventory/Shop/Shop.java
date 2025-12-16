@@ -23,6 +23,7 @@ public class Shop {
             inventory.addItemToInventory(newItem);
             inventory.updateBuyItemGold(newItem.getCost());
             inventory.updateBuyItemWeight(newItem.getWeight());
+            inventory.updateCurrentSlotUsed(1);
             return;
         }
 
@@ -61,6 +62,7 @@ public class Shop {
         inventory.addItemToInventory(newItem);
         inventory.updateBuyItemGold(newItem.getCost());
         inventory.updateBuyItemWeight(newItem.getWeight());
+        inventory.updateCurrentSlotUsed(1);
     }
 
     public void sellItem(Inventory inventory, Item item) {
@@ -76,6 +78,7 @@ public class Shop {
                 } else {
                     // last one -> remove item entirely (and get full value)
                     inventory.removeItem(item);       // your Inventory.removeItem already:
+                    inventory.updateCurrentSlotUsed(-1);
                     //  gold += cost, weight -= weight
                 }
                 return;
@@ -91,6 +94,7 @@ public class Shop {
                     inventory.addWeight(-item.getWeight());
                 } else {
                     inventory.removeItem(item);
+                    inventory.updateCurrentSlotUsed(-1);
                 }
                 return;
             }
@@ -98,5 +102,6 @@ public class Shop {
             // ---------- Non-stackable: Weapon / Armor / other ----------
             // For Weapon/Armor you just sell/remove the whole item:
             inventory.removeItem(item);
+            inventory.updateCurrentSlotUsed(-1);
     }
 }

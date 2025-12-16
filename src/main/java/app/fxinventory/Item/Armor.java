@@ -7,8 +7,8 @@ public class Armor extends Item {
     private int defencePoint;
     private final ArmorSlotType slotType;
 
-    public Armor (String name, double weight, int cost, ItemType type, int defencePoint,  ArmorSlotType slotType, int totalAmount) {
-        super(name, weight, cost, type, totalAmount);
+    public Armor (String name, double weight, int cost, ItemType type, int defencePoint,  ArmorSlotType slotType) {
+        super(name, weight, cost, type);
         this.defencePoint = defencePoint;
         this.slotType = slotType;
     }
@@ -25,6 +25,6 @@ public class Armor extends Item {
 
     @Override
     public Item createInstance(){
-        return new Armor(name, weight,cost,type,defencePoint,slotType,totalAmount);
+        return new Armor(name, weight,cost,type,defencePoint,slotType);
     }
 }
