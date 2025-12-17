@@ -9,9 +9,9 @@ public class Inventory {
     // Inventory attributter
 
     protected ArrayList<Item> inventory = new ArrayList<>();
-    protected int gold = 11500;                 // Specificerer [gold] start amount
-    protected double weight = 0;                // Specificerer [weight] start amount
-    protected int weightLimit = 50;             // Specificerer [weightLimit] - Hvor meget plads kan vi maks have?
+    protected int gold = 11500;
+    protected double weight = 0;
+    protected int weightLimit = 50;
     protected int slotLimit = 192;
     protected int availableSlots = 32;
     protected int currentSlotUsed;
@@ -70,10 +70,6 @@ public class Inventory {
     }
     public void updateWeightLimit(int amount){
         weightLimit += amount;
-    }
-
-    public int getSlotLimit(){
-        return  slotLimit;
     }
     public int getAvailableSlots(){
         return availableSlots;
