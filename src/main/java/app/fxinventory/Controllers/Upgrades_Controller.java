@@ -10,18 +10,24 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 
+// Controller for upgrade-skærmen.
+// Ansvar: vise slot-upgrades, håndtere køb af opgraderinger og opdatere HUD.
 public class Upgrades_Controller {
 
+    // Reference til fælles Inventory (spillerens data, slots, upgrades osv.)
     private Inventory inventory;
+
+    // Reference til fælles Shop (pt. ikke brugt her, men sendt videre ved "Back").
     private Shop shop;
 
+    // HUD-labels til guld og vægt.
     @FXML
     private Label gold_Label;
 
     @FXML
     private Label weight_Label;
 
-
+    // Labels til opgradering 1 (pris, navn og effekt-tekst).
     @FXML
     private Label SlotUpgradeOne_Price_Label;
     @FXML
@@ -29,6 +35,7 @@ public class Upgrades_Controller {
     @FXML
     private Label SlotUpgradeOne_Effect_Label;
 
+    // Labels til opgradering 2.
     @FXML
     private Label SlotUpgradeTwo_Price_Label;
     @FXML
@@ -36,6 +43,7 @@ public class Upgrades_Controller {
     @FXML
     private Label SlotUpgradeTwo_Effect_Label;
 
+    // Labels til opgradering 3.
     @FXML
     private Label SlotUpgradeThree_Price_Label;
     @FXML
@@ -43,24 +51,24 @@ public class Upgrades_Controller {
     @FXML
     private Label SlotUpgradeThree_Effect_Label;
 
+    // Label der viser brugte slots / tilgængelige slots.
     @FXML
     private Label slots_Label;
 
-    int slotUpgradeCost = 300;
-    int slotUpgradeLevel = 1;
-    int slotUpgradeEffect = 30;
-    int slotUpgradeMax = 3;
-
-
+    // Kaldes udefra for at injecte Inventory ind i controlleren.
+    // Når inventory er sat, opdateres HUD med aktuelle værdier.
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
         updateHud();
     }
 
+    // Kaldes udefra for at injecte Shop (videreført til Game_Home ved "Back").
     public void setShop(Shop shop) {
         this.shop = shop;
     }
 
+    // Tilbage-knap: skifter tilbage til Game_Home.fxml
+    // og tager Inventory og Shop med videre via SceneNavigator.
     @FXML
     public void onBackButton(ActionEvent event) throws IOException {
         SceneNavigator.switchTo(event, "Game_Home.fxml", (Game_Home_Controller c) -> {
@@ -69,12 +77,14 @@ public class Upgrades_Controller {
         });
     }
 
+    // Opdaterer HUD-labels (guld, vægt, slots) ud fra inventory-objektet.
     private void updateHud() {
         if (gold_Label != null) {
             gold_Label.setText(String.valueOf(inventory.getGold()));
         }
         if (weight_Label != null) {
             double w = inventory.getWeight();
+            // Undgå at vise -0.0 pga. floating point afrunding.
             if (Math.abs(w) < 1e-3) {
                 w = 0.0;
             }
@@ -83,23 +93,25 @@ public class Upgrades_Controller {
             );
         }
         if (slots_Label != null) {
+            // Viser "brugte slots / maks slots".
             slots_Label.setText(String.valueOf(inventory.getCurrentSlotUsed())+ "/" + String.valueOf(inventory.getAvailableSlots()));
         }
     }
 
-    // Fælles metode til at håndtere køb af en slot-upgrade
+    // Fælles metode til at håndtere køb af en slot-upgrade.
+    // Bruges af alle tre opgraderingers onClick-metoder, så logikken ikke duplikeres.
     private void handleSlotUpgrade(
-            int currentLevel,               // nuværende "level" for denne upgrade
-            int maxLevel,                   // max "level" (eller købt-status)
-            int cost,                       // pris i guld
-            int slotsEffect,                // hvor mange ekstra slots man får
-            String upgradeNameText,         // tekst til navn-label ("Slot Upgrade: I")
-            Label nameLabel,                // den label, der viser navn
-            Label priceLabel,               // den label, der viser pris
-            Label effectLabel,              // den label, der viser effekt-tekst
-            java.util.function.IntConsumer levelSetter // hvordan vi gemmer det nye level i inventory
+            int currentLevel,               // Nuværende "level" for denne upgrade (fx 1 = ikke købt, 2 = købt)
+            int maxLevel,                   // Max "level" (typisk 2 → købt/aktiveret)
+            int cost,                       // Pris i guld
+            int slotsEffect,                // Hvor mange ekstra slots denne upgrade giver
+            String upgradeNameText,         // Tekst til navn-label (fx "Slot Upgrade: I")
+            Label nameLabel,                // Label der viser navnet på upgraden
+            Label priceLabel,               // Label der viser pris-tekst
+            Label effectLabel,              // Label der viser effekt-tekst
+            java.util.function.IntConsumer levelSetter // Lambda, der gemmer det nye level i Inventory
     ) {
-        // Allerede købt / max niveau nået?
+        // Tjek om spilleren allerede har købt denne opgradering / nået max-niveau.
         if (currentLevel >= maxLevel) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Warning");
@@ -108,7 +120,7 @@ public class Upgrades_Controller {
             return;
         }
 
-        // Har spilleren råd?
+        // Tjek om spilleren har nok guld til at købe opgraderingen.
         if (inventory.getGold() < cost) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Warning");
@@ -118,64 +130,67 @@ public class Upgrades_Controller {
             return;
         }
 
-        // Udfør selve købet
-        inventory.updateAvailableSlots(slotsEffect); // giver flere slots
-        inventory.addGold(-cost);                    // trækker guld
+        // Selve købet: giv flere slots og træk guld.
+        inventory.updateAvailableSlots(slotsEffect); // Forøger antal tilgængelige slots.
+        inventory.addGold(-cost);                    // Trækker guld for opgraderingen.
 
-        // Sæt level til maxLevel (typisk "købt"-state)
+        // Sæt upgrade-level til maxLevel (markerer at den nu er købt/fuldt opgraderet).
         levelSetter.accept(maxLevel);
 
-        // Opdater labels for denne upgrade
+        // Opdater labels for denne upgrade, så UI afspejler købet.
         nameLabel.setText(upgradeNameText);
         priceLabel.setText("Cost: " + cost + " Guld");
         effectLabel.setText("Effect: +" + slotsEffect + " slots");
 
-        // Opdater HUD (guld/vægt)
+        // Opdater HUD (guld, slots osv.) efter købet.
         updateHud();
     }
 
+    // Klik-handler for første slot-upgrade.
     @FXML
     private void onUpgradeSlotOne() {
         handleSlotUpgrade(
-                inventory.getSlotUpgradeOne(),        // currentLevel
+                inventory.getSlotUpgradeOne(),        // currentLevel fra Inventory
                 2,                                     // maxLevel (1 = ikke købt, 2 = købt)
-                300,                                   // cost
-                30,                                    // slotsEffect
-                "Slot Upgrade: I",                     // navn-tekst
+                300,                                   // cost i guld
+                30,                                    // slotsEffect (giver +30 slots)
+                "Slot Upgrade: I",                     // navn-tekst til UI
                 SlotUpgradeOne_Name_Label,             // nameLabel
                 SlotUpgradeOne_Price_Label,            // priceLabel
                 SlotUpgradeOne_Effect_Label,           // effectLabel
-                level -> inventory.setSlotUpgradeOne(level) // sådan gemmer vi level
+                level -> inventory.setSlotUpgradeOne(level) // Gem nyt level i Inventory
         );
     }
 
+    // Klik-handler for anden slot-upgrade (dyrere og større effekt).
     @FXML
     private void onUpgradeSlotTwo() {
         handleSlotUpgrade(
-                inventory.getSlotUpgradeTwo(),        // currentLevel
-                2,                                     // maxLevel (1 = ikke købt, 2 = købt)
-                1000,                                   // cost
-                50,                                    // slotsEffect
-                "Slot Upgrade: II",                     // navn-tekst
+                inventory.getSlotUpgradeTwo(),         // currentLevel
+                2,                                     // maxLevel
+                1000,                                  // cost
+                50,                                    // slotsEffect (giver +50 slots)
+                "Slot Upgrade: II",                    // navn-tekst
                 SlotUpgradeTwo_Name_Label,             // nameLabel
                 SlotUpgradeTwo_Price_Label,            // priceLabel
                 SlotUpgradeTwo_Effect_Label,           // effectLabel
-                level -> inventory.setSlotUpgradeTwo(level) // sådan gemmer vi level
+                level -> inventory.setSlotUpgradeTwo(level) // Gem i Inventory
         );
     }
 
+    // Klik-handler for tredje slot-upgrade (dyrest og størst effekt).
     @FXML
     private void onUpgradeSlotThree() {
         handleSlotUpgrade(
-                inventory.getSlotUpgradeThree(),        // currentLevel
-                2,                                     // maxLevel (1 = ikke købt, 2 = købt)
-                2500,                                   // cost
-                80,                                    // slotsEffect
-                "Slot Upgrade: III",                     // navn-tekst
-                SlotUpgradeThree_Name_Label,             // nameLabel
-                SlotUpgradeThree_Price_Label,            // priceLabel
-                SlotUpgradeThree_Effect_Label,           // effectLabel
-                level -> inventory.setSlotUpgradeThree(level) // sådan gemmer vi level
+                inventory.getSlotUpgradeThree(),       // currentLevel
+                2,                                     // maxLevel
+                2500,                                  // cost
+                80,                                    // slotsEffect (giver +80 slots)
+                "Slot Upgrade: III",                   // navn-tekst
+                SlotUpgradeThree_Name_Label,           // nameLabel
+                SlotUpgradeThree_Price_Label,          // priceLabel
+                SlotUpgradeThree_Effect_Label,         // effectLabel
+                level -> inventory.setSlotUpgradeThree(level) // Gem i Inventory
         );
     }
 

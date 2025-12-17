@@ -5,10 +5,15 @@ import app.fxinventory.Enums.ItemName;
 import java.util.HashMap;
 import java.util.Map;
 
+// Registry der bruges til at konvertere fra et "display name" (String)
+// til den tilsvarende ItemName-enum.
+// Det er nyttigt fx når vi loader fra database eller GUI, hvor vi kun har navnet som tekst.
 public class ItemNameToItemNameRegistry {
 
+    // Map med nøglen = visningsnavn (String), værdien = ItemName-enum.
     private static final Map<String, ItemName> NameConverter = new HashMap<>();
 
+    // Statisk blok der initialiserer alle kendte navne → ItemName-mappinger.
     static {
         // ======================
         // Weapons
@@ -130,6 +135,9 @@ public class ItemNameToItemNameRegistry {
                 ItemName.Defence_Potion);
     }
 
+    // Konverterer fra et visningsnavn (String, fx "Health Potion")
+    // til den tilsvarende ItemName-enum.
+    // Returnerer null, hvis navnet ikke findes i mappet.
     public static ItemName fromDisplayName(String name) {
         return NameConverter.get(name);
     }

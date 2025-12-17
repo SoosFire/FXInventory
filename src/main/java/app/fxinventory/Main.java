@@ -13,24 +13,30 @@ import javafx.scene.text.Font;
 
 import java.io.IOException;
 
+// Hovedklassen for JavaFX-applikationen.
+// Arver fra Application og er entry point for GUI-delen.
 public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // Create shared objects
+        // Opretter de fælles objekter, som skal bruges på tværs af scener:
+        // ét Inventory-objekt til spillerens items og stats...
         Inventory inventory = new Inventory();
+        // ... og ét Shop-objekt til shop-logikken.
         Shop shop = new Shop();
 
-        // Load first screen
+        // Loader den første skærm (Main-menuen) fra Main.fxml.
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("Main.fxml"));
         Parent root = loader.load();
 
-        // Inject dependencies
+        // Henter controlleren, der hører til Main.fxml,
+        // og giver den adgang til Inventory og Shop (dependency injection).
         Main_Controller controller = loader.getController();
         controller.setInventory(inventory);
         controller.setShop(shop);
 
-        // Show stage
+        // Opretter scenen med root-node og en fast størrelse,
+        // og viser den i det primære Stage (vindue).
         Scene scene = new Scene(root, 1000, 750);
         stage.setScene(scene);
         stage.show();

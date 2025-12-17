@@ -5,14 +5,22 @@ import app.fxinventory.Enums.*;
 import java.util.HashMap;
 import java.util.Map;
 
+// Registry/factory for alle spillets item-typer.
+// Ideen er: for hver ItemName har vi én "skabelon"-instans (definition),
+// og når spillet skal bruge et item, laves en frisk kopi via createInstance().
 public class ItemRegistry {
 
+    // Map der forbinder et ItemName (enum) med et Item-objekt (skabelon).
+    // Skabelonen bruges ikke direkte i spillet, men som prototype til nye instanser.
     private static final Map<ItemName, Item> DEFINITIONS = new HashMap<>();
 
+    // Statisk blok der køres én gang, når klassen loades.
+    // Her registreres ALLE mulige items i spillet.
     static {
         // ======================
         // Weapons
         // ======================
+        // Hvert våben oprettes med faste værdier: navn, vægt, pris, damage, type og slot-type.
         DEFINITIONS.put(ItemName.Wooden_Sword,
                 new Weapon("Wooden Sword", 2.0, 50, 6,
                         ItemType.WEAPON, WeaponSlotType.ONE_HANDED));
@@ -77,6 +85,7 @@ public class ItemRegistry {
         // ======================
         // Armor – Helmets
         // ======================
+        // Rustningselementer med type ARMOR og en bestemt ArmorSlotType.
         DEFINITIONS.put(ItemName.Basic_Helmet,
                 new Armor("Basic Helmet", 3.0, 100,
                         ItemType.ARMOR, 3, ArmorSlotType.HELMET));
@@ -100,7 +109,6 @@ public class ItemRegistry {
 
         // ======================
         // Armor – Shields
-        // (if your ArmorSlotType name is different, change SHIELD accordingly)
         // ======================
         DEFINITIONS.put(ItemName.Small_Wooden_Shield,
                 new Armor("Small Wooden Shield", 4.0, 120,
@@ -121,6 +129,7 @@ public class ItemRegistry {
         // ======================
         // Utility – Scrolls and Tomes
         // ======================
+        // Utility-items er stackable og bruges typisk som ressourcer/særlige genstande.
         DEFINITIONS.put(ItemName.Scroll,
                 new Utility("Scroll", 0.5, 80,
                         ItemType.UTILITY, 1));
@@ -145,6 +154,7 @@ public class ItemRegistry {
         // ======================
         // Consumables
         // ======================
+        // Consumables er også stackable (fx potions).
         DEFINITIONS.put(ItemName.Health_Potion,
                 new Consumable("Health Potion", 1.0, 100,
                         ItemType.CONSUMABLE, 1));
@@ -162,6 +172,11 @@ public class ItemRegistry {
                         ItemType.CONSUMABLE, 1));
     }
 
+    // Slår en item-definition op ud fra ItemName.
+    // Bemærk: dette returnerer SKABELONEN, ikke en ny instans.
+    // I resten af koden bruges derfor typisk:
+    //   ItemRegistry.getDefinition(itemName).createInstance();
+    // for at få en frisk kopi.
     public static Item getDefinition(ItemName itemName) {
         return DEFINITIONS.get(itemName);
     }

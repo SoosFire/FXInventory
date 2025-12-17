@@ -34,145 +34,134 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 
+// Controller for inventory-skærmen.
+// Har ansvaret for at vise spillerens items, håndtere salg, filtrering og sideskift.
 public class Inventory_Controller {
 
-    //--------------------------------------------------------------//
-    //  Import of Inventory and Shop
-    //--------------------------------------------------------------//
-
+    // Reference til det fælles Inventory-objekt (spillerens data).
     private Inventory inventory;
+
+    // Reference til det fælles Shop-objekt (bruges til salg af items).
     private Shop shop;
 
-    //--------------------------------------------------------------//
-    //  Build Shop Measurements
-    // 3 rows x 6 columns = 18 slots total
-    //--------------------------------------------------------------//
+    // Antal rækker i inventory-griddet.
     private static final int ROWS = 3;
+
+    // Antal kolonner i inventory-griddet.
     private static final int COLS = 8;
 
-    //--------------------------------------------------------------//
-    //  Change Inventory Page
-    //--------------------------------------------------------------//
+    // Index i displayedItems for det første item på den aktuelle side.
+    private int index = 0;
 
-    private  int index = 0;
-    private  int inventoryPage = 1;
+    // Aktuelt sidenummer i inventory (1-baseret).
+    private int inventoryPage = 1;
 
-    //--------------------------------------------------------------//
-    //  Card Measurements
-    //--------------------------------------------------------------//
+    // Billedstørrelse for item-ikoner (bredden/højden i pixler).
     private static final double SLOT_IMAGE_SIZE = 100;
+
+    // Bredde på knappen under hvert slot.
     private static final double SLOT_BUTTON_WIDTH = 100;
+
+    // Højde på knappen under hvert slot.
     private static final double SLOT_BUTTON_HEIGHT = 50;
 
-    //--------------------------------------------------------------//
-    //  ArrayList
-    //--------------------------------------------------------------//
-
+    // Liste over de items, der lige nu vises (kan være filtreret).
     private ArrayList<Item> displayedItems = new ArrayList<>();
 
-    //--------------------------------------------------------------//
-    //  Scene Change
-    //--------------------------------------------------------------//
+    @FXML
+    private Parent root;   // Rod-node for denne scene (kun relevant ved manuel navigation).
+    private Scene scene;   // Scene-reference (bruges hvis vi manuelt vil skifte scene).
+    private Stage stage;   // Stage (vindue) som scenen vises i.
 
     @FXML
-    private Parent root;
-    private Scene scene;
-    private Stage stage;
-
-    //--------------------------------------------------------------//
-    //  VBox
-    //--------------------------------------------------------------//
+    private VBox inventoryVBox;   // Container, der holder alle rækker (HBox) med slots.
 
     @FXML
-    private VBox inventoryVBox;
-
-    //--------------------------------------------------------------//
-    //  Labels
-    //--------------------------------------------------------------//
+    private Label gold_Label;     // Viser spillerens nuværende guld.
 
     @FXML
-    private Label gold_Label;
+    private Label weight_Label;   // Viser vægt / vægt-grænse.
 
     @FXML
-    private Label weight_Label;
+    private Label pageLabel;      // Viser "side / antal sider".
 
     @FXML
-    private Label pageLabel;
-    @FXML
-    private Label slots_Label;
-
-    //--------------------------------------------------------------//
-    //  MenuButtons
-    //--------------------------------------------------------------//
-    @FXML
-    MenuButton weaponFilter_MenuButton = new  MenuButton("Weapon Filter");
+    private Label slots_Label;    // Viser "brugte slots / tilgængelige slots".
 
     @FXML
-    MenuButton itemTypeFilter_MenuButton = new  MenuButton("Weapon Filter");
+    MenuButton weaponFilter_MenuButton = new MenuButton("Weapon Filter");   // Menu til våben-slot-filter.
 
-    //--------------------------------------------------------------//
-    //  MenuItems
-    //--------------------------------------------------------------//
+    @FXML
+    MenuButton itemTypeFilter_MenuButton = new MenuButton("Weapon Filter"); // Menu til generel item-type-filter.
+
+    // MenuItems til våbentype-filter.
     private MenuItem filter_one_handed = new MenuItem("One-Handed");
     private MenuItem filter_two_handed = new MenuItem("Two-Handed");
     private MenuItem filter_dual_handed = new MenuItem("Dual-Handed");
+
+    // MenuItems til itemtype-filter.
     private MenuItem filter_ItemType_Weapon = new MenuItem("Weapon");
     private MenuItem filter_ItemType_Armor = new MenuItem("Armor");
     private MenuItem filter_ItemType_Utility = new MenuItem("Utility");
     private MenuItem filter_ItemType_Consumable = new MenuItem("Consumable");
 
-    //--------------------------------------------------------------//
-    //  Initialize (Start af programmet)
-    //--------------------------------------------------------------//
     @FXML
     public void initialize() {
+        // Kører automatisk når FXML'en er loadet.
+        // Her sætter vi filtre og deres klik-handlere op.
         menuButtonFilter();
     }
 
+    // Kaldes udefra (via SceneNavigator) for at give controlleren adgang til Inventory.
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
+        // Opdater HUD, så guld/vægt passer til inventory.
         updateHud();
-        buildInventory(0,startDisplayInventory());
+        // Start med at vise alle items fra inventaret.
+        buildInventory(0, startDisplayInventory());
     }
 
+    // Kaldes udefra (via SceneNavigator) for at give controlleren adgang til Shop.
     public void setShop(Shop shop) {
         this.shop = shop;
     }
 
-    //--------------------------------------------------------------//
-    //  Build Shop
-    //--------------------------------------------------------------//
+    // Bygger inventory-griddet dynamisk ud fra en liste af items og et startindex.
     private void buildInventory(int index, ArrayList<Item> displayedItems) {
+        // Fjern alle tidligere rækker.
         inventoryVBox.getChildren().clear();
 
+        // For hver række i inventoryet...
         for (int i = 0; i < ROWS; i++) {
-            HBox row = new HBox(7);
+            HBox row = new HBox(7);         // 7 = vandret afstand mellem slots.
             row.setAlignment(Pos.CENTER_LEFT);
 
+            // For hver kolonne i denne række...
             for (int j = 0; j < COLS; j++) {
+                // Hent item hvis index er i range, ellers er det et tomt slot.
                 Item item = index < displayedItems.size() ? displayedItems.get(index) : null;
+                // Lav et visuelt "kort" til slottet (billede + knap).
                 VBox slot = createSlotCard(item);
                 row.getChildren().add(slot);
-                index++;
+                index++;                    // Gå videre til næste item.
             }
 
+            // Tilføj rækken til den overordnede VBox.
             inventoryVBox.getChildren().add(row);
         }
     }
 
-    //--------------------------------------------------------------//
-    //  Slot Card
-    //--------------------------------------------------------------//
+    // Opretter et visuelt "slotkort" til inventoryet: billede, antal-tekst og SELL-knap.
     private VBox createSlotCard(Item item) {
-        // Outer card for a single slot
+        // Yderste container for et enkelt slot.
         VBox card = new VBox(3);
         card.setAlignment(Pos.TOP_CENTER);
         card.setPrefWidth(SLOT_IMAGE_SIZE);
         card.setMinWidth(SLOT_IMAGE_SIZE);
-        card.setMaxWidth(SLOT_IMAGE_SIZE); // tiny bit of margi
-        card.getStyleClass().add("name_card");
+        card.setMaxWidth(SLOT_IMAGE_SIZE);
+        card.getStyleClass().add("name_card");  // CSS-klasse til styling.
 
-        // Image + amount overlay
+        // StackPane bruges til at lægge tekst oven på billedet.
         StackPane imageStack = new StackPane();
         imageStack.setPrefSize(SLOT_IMAGE_SIZE, SLOT_IMAGE_SIZE);
         imageStack.setMinSize(SLOT_IMAGE_SIZE, SLOT_IMAGE_SIZE);
@@ -185,31 +174,35 @@ public class Inventory_Controller {
         imageView.setSmooth(true);
         imageView.setCache(true);
 
+        // Label der viser antal (stack size) for stackable items.
         Label amountLabel = new Label();
-        amountLabel.setTextFill(Color.WHITE);
+        amountLabel.setTextFill(Color.WHITE); // Hvid tekst så den kan ses på billedet.
 
         if (item != null) {
-            // Adjust this if your Item class exposes the enum differently
-            // e.g. item.getItemName()
+            // Find ItemName-enummen ud fra item’ets “display name”.
             ItemName itemName = ItemNameToItemNameRegistry.fromDisplayName(item.getName());
+            // Slå stien til billedet op ud fra ItemName.
             String path = ItemImageRegistry.getDefinition(itemName);
             if (path != null) {
                 URL url = getClass().getResource(path);
                 if (url != null) {
+                    // Indlæs og sæt billedet for dette slot.
                     imageView.setImage(new Image(url.toExternalForm()));
                 }
             }
+            // Vælg hvad der skal stå som antal afhængigt af typen.
             if (item instanceof Utility utility){
                 amountLabel.setText(String.valueOf(utility.getStackSize()));
             }
             else if (item instanceof Consumable consumable){
                 amountLabel.setText(String.valueOf(consumable.getStackSize()));
             } else if (item instanceof Weapon || item instanceof Armor){
+                // Våben og rustninger stacker ikke, så vi viser 1.
                 amountLabel.setText("1");
             }
 
         } else {
-            // Optional: empty slot placeholder
+            // Hvis der ikke er noget item, kan vi vise et “tomt slot”-billede.
             URL url = getClass().getResource("/app/fxinventory/Images/empty_slot.png");
             if (url != null) {
                 imageView.setImage(new Image(url.toExternalForm()));
@@ -217,12 +210,13 @@ public class Inventory_Controller {
             amountLabel.setText("");
         }
 
+        // Placér tekst nederst til venstre oven på billedet.
         StackPane.setAlignment(amountLabel, Pos.BOTTOM_LEFT);
         StackPane.setMargin(amountLabel, new Insets(0, 0, 3, 3));
 
         imageStack.getChildren().addAll(imageView, amountLabel);
 
-        // Button under the image
+        // Knap under billedet – bruges til at sælge item’et.
         Button slotButton = new Button(item != null ? "SELL" : "");
         slotButton.setPrefWidth(SLOT_BUTTON_WIDTH);
         slotButton.setMinWidth(SLOT_BUTTON_WIDTH);
@@ -230,40 +224,42 @@ public class Inventory_Controller {
         slotButton.setPrefHeight(SLOT_BUTTON_HEIGHT);
 
         if (item == null) {
+            // Tomt slot → ingen handling, så knappen er disabled.
             slotButton.setDisable(true);
         } else {
+            // Når der klikkes på knappen, sælges det konkrete item.
             slotButton.setOnAction(e -> onSlotSellClicked(item));
         }
 
+        // Forhindrer at imageStack og knappen strækker sig lodret.
         VBox.setVgrow(imageStack, Priority.NEVER);
         VBox.setVgrow(slotButton, Priority.NEVER);
 
+        // Tilføj billede + knap til kortet.
         card.getChildren().addAll(imageStack, slotButton);
         return card;
     }
 
-    //--------------------------------------------------------------//
-    //  SELL Button
-    //--------------------------------------------------------------//
     @FXML
     public void onSlotSellClicked(Item item) {
+        // Sælger item’et via Shop-logikken (opdaterer guld, vægt, slots, stack osv.).
         shop.sellItem(inventory, item);
+        // Opdater HUD efter salget.
         updateHud();
+        // Genopbyg visningen på baggrund af det opdaterede inventory.
         displayedItems.clear();
         startDisplayInventory();
-        buildInventory(0,displayedItems);
+        buildInventory(0, displayedItems);
     }
 
-    //--------------------------------------------------------------//
-    //  Update HUD
-    //--------------------------------------------------------------//
-
+    // Opdaterer HUD-elementer: guld, vægt, slots og side-indikator.
     private void updateHud() {
         if (gold_Label != null) {
             gold_Label.setText(String.valueOf(inventory.getGold()));
         }
         if (weight_Label != null) {
             double w = inventory.getWeight();
+            // Undgå at vise -0.0 pga. floating point afrunding.
             if (Math.abs(w) < 1e-3) {
                 w = 0.0;
             }
@@ -272,52 +268,50 @@ public class Inventory_Controller {
             );
         }
         if (slots_Label != null) {
-            slots_Label.setText(String.valueOf(inventory.getCurrentSlotUsed()) + "/" + String.valueOf(inventory.getAvailableSlots()));
+            // Viser “antal brugte slots / antal tilgængelige slots”.
+            slots_Label.setText(
+                    String.valueOf(inventory.getCurrentSlotUsed())
+                            + "/"
+                            + String.valueOf(inventory.getAvailableSlots())
+            );
         }
 
-
+        // Viser aktuel side samt maks antal sider (her hårdkodet til 8).
         pageLabel.setText(inventoryPage + "/" + 8);
     }
 
-    //--------------------------------------------------------------//
-    //  Back Button
-    //--------------------------------------------------------------//
-
     @FXML
     public void onBackButton(ActionEvent event) throws IOException {
+        // Gå tilbage til Game_Home scenen.
+        // Vi sender inventory og shop med, så state bevares.
         SceneNavigator.switchTo(event, "Game_Home.fxml", (Game_Home_Controller c) -> {
             c.setInventory(inventory);
             c.setShop(shop);
         });
     }
 
-    //--------------------------------------------------------------//
-    //  Inventory Page
-    //  Next / Previous
-    //--------------------------------------------------------------//
-
     @FXML
     public void onClickNextPage() {
+        // Skift til næste side og beregn nyt startindex ud fra side og slots pr. side.
         inventoryPage++;
-        index = (inventoryPage - 1) * 24;
-        buildInventory(index,displayedItems);
+        index = (inventoryPage - 1) * 24;    // 24 = ROWS * COLS.
+        buildInventory(index, displayedItems);
         updateHud();
     }
+
     @FXML
     public void onClickPreviousPage() {
+        // Skift kun tilbage, hvis vi ikke allerede er på første side.
         if (inventoryPage > 1) {
             inventoryPage--;
         }
         index = (inventoryPage - 1) * 24;
-        buildInventory(index,displayedItems);
+        buildInventory(index, displayedItems);
         updateHud();
     }
 
-
-    //--------------------------------------------------------------//
-    //  Item Filter
-    //--------------------------------------------------------------//
-
+    // Filtrerer inventoryet efter ItemType (Weapon, Armor, Utility, Consumable).
+    // Resultatet gemmes i displayedItems og vises i griddet.
     public void filterByItemType(ItemType itemType) {
         displayedItems.clear();
         for (Item item : inventory.getItems()) {
@@ -325,13 +319,10 @@ public class Inventory_Controller {
                 displayedItems.add(item);
             }
         }
-        buildInventory(0,displayedItems);
+        buildInventory(0, displayedItems);
     }
 
-    //--------------------------------------------------------------//
-    //  Weapon Filter
-    //--------------------------------------------------------------//
-
+    // Filtrerer inventoryet efter våben-slot-type (One-/Two-/Dual-handed).
     public void filterByWeaponSlot (WeaponSlotType slotType){
         displayedItems.clear();
         for (Item item : inventory.getItems()) {
@@ -340,41 +331,45 @@ public class Inventory_Controller {
                     displayedItems.add(item);
                 }
         }
-        buildInventory(0,displayedItems);
+        buildInventory(0, displayedItems);
     }
 
-    //--------------------------------------------------------------//
-    //  Start Display
-    //--------------------------------------------------------------//
-
+    // Starter visningen af inventoryet ved at kopiere alle items over i displayedItems.
     private ArrayList<Item> startDisplayInventory () {
         displayedItems.clear();
         displayedItems.addAll(inventory.getItems());
         return displayedItems;
     }
 
-    //--------------------------------------------------------------//
-    //  MenuButton Initializer
-    //--------------------------------------------------------------//
-
+    // Initialiserer menuknapperne til filtrering og tilknytter deres event handlers.
     private void menuButtonFilter () {
 
+        // Weapon filter menu: nulstil og sæt standardtekst.
         weaponFilter_MenuButton.getItems().clear();
         weaponFilter_MenuButton.setText("Weapon Filter");
 
-        filter_one_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.ONE_HANDED));           // -> Metode onFilterOneHanded(WeaponSlotType.ONE_HANDED)
-        filter_two_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.TWO_HANDED));           // -> Metode onFilterTwoHanded(WeaponSlotType.TWO_HANDED)
-        filter_dual_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.DUAL_HANDED));        // -> Metode onFilterDualHanded(WeaponSlotType.DUAL_HANDED)
+        // Tilknyt handling til hver våbentype.
+        filter_one_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.ONE_HANDED));
+        filter_two_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.TWO_HANDED));
+        filter_dual_handed.setOnAction(e -> filterByWeaponSlot(WeaponSlotType.DUAL_HANDED));
 
         weaponFilter_MenuButton.getItems().addAll(filter_one_handed, filter_two_handed, filter_dual_handed);
 
+        // Item type filter menu: nulstil og sæt standardtekst.
         itemTypeFilter_MenuButton.getItems().clear();
         itemTypeFilter_MenuButton.setText("Item Type");
-        filter_ItemType_Weapon.setOnAction(e -> filterByItemType(ItemType.WEAPON));              // -> Metode onFilterWeaponClick(ItemType.WEAPON)
-        filter_ItemType_Armor.setOnAction(e -> filterByItemType(ItemType.ARMOR));                 // -> Metode onFilterArmorClick(ItemType.ARMOR)
-        filter_ItemType_Utility.setOnAction(e -> filterByItemType(ItemType.UTILITY));           // -> Metode onFilterUtilityClick(ItemType.UTILITY)
-        filter_ItemType_Consumable.setOnAction(e -> filterByItemType(ItemType.CONSUMABLE));  // -> Metode onFilterConsumableClick(ItemType.CONSUMABLE)
 
-        itemTypeFilter_MenuButton.getItems().addAll(filter_ItemType_Weapon, filter_ItemType_Armor, filter_ItemType_Utility, filter_ItemType_Consumable);
+        // Tilknyt handling til hver itemtype.
+        filter_ItemType_Weapon.setOnAction(e -> filterByItemType(ItemType.WEAPON));
+        filter_ItemType_Armor.setOnAction(e -> filterByItemType(ItemType.ARMOR));
+        filter_ItemType_Utility.setOnAction(e -> filterByItemType(ItemType.UTILITY));
+        filter_ItemType_Consumable.setOnAction(e -> filterByItemType(ItemType.CONSUMABLE));
+
+        itemTypeFilter_MenuButton.getItems().addAll(
+                filter_ItemType_Weapon,
+                filter_ItemType_Armor,
+                filter_ItemType_Utility,
+                filter_ItemType_Consumable
+        );
     }
 }

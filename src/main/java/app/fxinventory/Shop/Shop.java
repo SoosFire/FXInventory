@@ -6,33 +6,39 @@ import app.fxinventory.Inventory.*;
 
 import java.util.ArrayList;
 
+// Repræsenterer butikkens "service-lag".
+// Indeholder logikken for at købe og sælge items i forhold til spillerens Inventory.
 public class Shop {
 
+    // Potentiel liste over varer i shoppen (bruges ikke direkte i den nuværende løsning).
     ArrayList<Item> shop = new ArrayList<>();
 
+    // Håndterer køb af et item ud fra et ItemName (enum) og spillerens Inventory.
     public void buyItem(Inventory inventory, ItemName itemName) {
-        // New item instance for this purchase
+        // Opretter en ny instans af varen, baseret på definitionen i ItemRegistry.
         Item newItem = ItemRegistry.getDefinition(itemName).createInstance();
 
-        // Only Utility and Consumable are stackable
+        // Kun Utility og Consumable er stackable (kan være flere i samme slot).
         boolean isUtility = newItem instanceof Utility;
         boolean isConsumable = newItem instanceof Consumable;
 
+        // Hvis det ikke er stackable (fx Weapon eller Armor):
         if (!isUtility && !isConsumable) {
-            // Non-stackable: just add as a separate item
+            // Læg item direkte i inventory som et separat item.
             inventory.addItemToInventory(newItem);
-            inventory.updateBuyItemGold(newItem.getCost());
-            inventory.updateBuyItemWeight(newItem.getWeight());
-            inventory.updateCurrentSlotUsed(1);
+            inventory.updateBuyItemGold(newItem.getCost());      // træk guld
+            inventory.updateBuyItemWeight(newItem.getWeight());  // tilføj vægt
+            inventory.updateCurrentSlotUsed(1);                  // ny stak → nyt slot i brug
             return;
         }
 
+        // Maks antal enheder i én stack.
         final int MAX_STACK = 16;
 
-        // 1) Try to add to an existing stack of the same item
+        // 1) Først: prøv at finde en eksisterende stack af samme item, der ikke er fuld.
         for (Item invItem : inventory.getItems()) {
 
-            // Must be same display name (or better: same ItemName if you store it)
+            // Navnet skal matche (samme item); alternativt kunne man matche på ItemName.
             if (!invItem.getName().equals(newItem.getName())) {
                 continue;
             }
@@ -40,7 +46,8 @@ public class Shop {
             // --- Utility case ---
             if (invItem instanceof Utility existingUtility && isUtility) {
                 if (existingUtility.getStackSize() < MAX_STACK) {
-                    existingUtility.updateStackSize(1);   // increment stack
+                    // Der er plads i stacken → tilføj 1 til stack.
+                    existingUtility.updateStackSize(1);
                     inventory.updateBuyItemGold(newItem.getCost());
                     inventory.updateBuyItemWeight(newItem.getWeight());
                     return;
@@ -50,7 +57,8 @@ public class Shop {
             // --- Consumable case ---
             if (invItem instanceof Consumable existingConsumable && isConsumable) {
                 if (existingConsumable.getStackSize() < MAX_STACK) {
-                    existingConsumable.updateStackSize(1);  // increment stack
+                    // Der er plads i stacken → tilføj 1.
+                    existingConsumable.updateStackSize(1);
                     inventory.updateBuyItemGold(newItem.getCost());
                     inventory.updateBuyItemWeight(newItem.getWeight());
                     return;
@@ -58,50 +66,53 @@ public class Shop {
             }
         }
 
-        // 2) No non-full stack found → start a new stack
+        // 2) Hvis vi ikke fandt en ikke-fuld stack → start en ny stack (nyt slot i brug).
         inventory.addItemToInventory(newItem);
         inventory.updateBuyItemGold(newItem.getCost());
         inventory.updateBuyItemWeight(newItem.getWeight());
         inventory.updateCurrentSlotUsed(1);
     }
 
+    // Håndterer salg af et item fra spillerens Inventory.
     public void sellItem(Inventory inventory, Item item) {
-            // ---------- Stackable: Utility ----------
-            if (item instanceof Utility utility) {
-                int stack = utility.getStackSize();   // or getTotalAmount(), adjust to your API
 
-                if (stack > 1) {
-                    // sell one from the stack
-                    utility.updateStackSize(-1);      // decrement stack by 1
-                    inventory.addGold(item.getCost());
-                    inventory.addWeight(-item.getWeight());
-                } else {
-                    // last one -> remove item entirely (and get full value)
-                    inventory.removeItem(item);       // your Inventory.removeItem already:
-                    inventory.updateCurrentSlotUsed(-1);
-                    //  gold += cost, weight -= weight
-                }
-                return;
+        // ---------- Stackable: Utility ----------
+        if (item instanceof Utility utility) {
+            int stack = utility.getStackSize();
+
+            if (stack > 1) {
+                // Hvis der er mere end 1 i stacken → sælg 1 enhed.
+                utility.updateStackSize(-1);
+                inventory.addGold(item.getCost());          // få guld for salget
+                inventory.addWeight(-item.getWeight());     // item vejer ikke længere
+            } else {
+                // Hvis det var den sidste i stacken → fjern hele item’et.
+                inventory.removeItem(item);                 // fjerner item og justerer guld/vægt
+                inventory.updateCurrentSlotUsed(-1);        // ét slot mindre i brug
             }
+            return;
+        }
 
-            // ---------- Stackable: Consumable ----------
-            if (item instanceof Consumable consumable) {
-                int stack = consumable.getStackSize(); // or getTotalAmount()
+        // ---------- Stackable: Consumable ----------
+        if (item instanceof Consumable consumable) {
+            int stack = consumable.getStackSize();
 
-                if (stack > 1) {
-                    consumable.updateStackSize(-1);
-                    inventory.addGold(item.getCost());
-                    inventory.addWeight(-item.getWeight());
-                } else {
-                    inventory.removeItem(item);
-                    inventory.updateCurrentSlotUsed(-1);
-                }
-                return;
+            if (stack > 1) {
+                // Sælg kun 1 enhed fra stacken.
+                consumable.updateStackSize(-1);
+                inventory.addGold(item.getCost());
+                inventory.addWeight(-item.getWeight());
+            } else {
+                // Sidste enhed → fjern hele item’et.
+                inventory.removeItem(item);
+                inventory.updateCurrentSlotUsed(-1);
             }
+            return;
+        }
 
-            // ---------- Non-stackable: Weapon / Armor / other ----------
-            // For Weapon/Armor you just sell/remove the whole item:
-            inventory.removeItem(item);
-            inventory.updateCurrentSlotUsed(-1);
+        // ---------- Non-stackable: Weapon / Armor / andre ----------
+        // Våben, rustning osv. sælges altid som ét helt item.
+        inventory.removeItem(item);          // fjerner item + justerer guld/vægt
+        inventory.updateCurrentSlotUsed(-1); // ét slot mindre i brug
     }
 }

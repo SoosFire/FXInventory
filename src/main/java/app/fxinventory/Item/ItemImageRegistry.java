@@ -5,10 +5,15 @@ import app.fxinventory.Enums.ItemName;
 import java.util.HashMap;
 import java.util.Map;
 
+// Registry der kobler hver ItemName-enum til stien på dets billede.
+// Dvs. domænemodellen (ItemName) holdes adskilt fra præsentationslaget (konkrete image-filer).
 public class ItemImageRegistry {
 
+    // Map: nøglen er ItemName, værdien er en String med stien til billedfilen.
     private static final Map<ItemName, String> IMAGE_PATH = new HashMap<>();
 
+    // Statisk blok, der initialiserer alle sammenhænge mellem ItemName og billedsti.
+    // Kaldes én gang, når klassen loades.
     static {
         // ======================
         // Weapons
@@ -109,6 +114,8 @@ public class ItemImageRegistry {
                 "/app/fxinventory/Images/PotionGreen.png");
     }
 
+    // Giver billedstien for et givent ItemName.
+    // Bruges fx i Inventory_Controller og Shop_Controller til at loade det rigtige ikon.
     public static String getDefinition(ItemName itemName) {
         return IMAGE_PATH.get(itemName);
     }
