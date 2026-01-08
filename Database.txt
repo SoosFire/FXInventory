@@ -1,0 +1,27 @@
+CREATE DATABASE FXInventory_DB;
+
+USE FXInventory_DB;
+
+CREATE TABLE Inventory_DB (
+    ID int AUTO_INCREMENT,
+    itemName VARCHAR(255),
+    itemCost int,
+    itemWeight double,
+    itemType VARCHAR (255),
+    armorSlotType varchar(255),
+    defencePoint int,
+    weaponSlotType varchar(255),
+    damage int,
+    stackSize int,
+    primary key (ID)
+);
+
+CREATE TABLE InventoryMisc_DB (
+    gold int,
+    weight double,
+    currentSlots int,
+    availableSlots int,
+    slotUpgradeOne int,
+    slotUpgradeTwo int,
+    slotUpgradeThree int
+);
